@@ -1,3 +1,10 @@
+//LIBRS FlatFile Reader
+//LIBRS SPECS https://docs.librs.org/librs-spec
+//LIBRS Validator https://api.librs.org/
+//API POST https://api.librs.org/api/validate/txt
+//LIBRS UPLOAD https://ftp.lsa.org/webclient/Login.xhtml
+//LIBRS CODES https://github.com/bttruman/winlibrs-docs/tree/master/_data
+
 import {
     SubmissionHeader,
     Administrative,
