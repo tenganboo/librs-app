@@ -9,14 +9,16 @@ import {
     SubmissionHeader,
     Administrative,
     Offense,
-    Property
+    Property,
+    PropertyDesc,
+    PropertyOffense,
+    Offender
+
 } from './librsRegExModal';
 
 
 class LIBRS {
 
-    #propertyDesc31 =/(31)([ID]{1})(.{9})(.{12})([1-8|\s]{1})([\d|\s]{2})([\s|\d]{9})([\s|\d]{8})(.{2})(.{13})(.{2})(\d{3})(\s{17})(ZZ)/gm;
-    #propertyOff33 =/^(33)([ID]{1})(.{9})(.{12})(\d{3})(\d{3})(.{20})(ZZ)/gm;
     #offender40 =/^(40)([ID]{1})(.{9})(.{12})(\d{3})([\s|\d]{3})([\d|\s]{8})([\s|\w]{1})([\s|\w]{1})(\d{2})([\s|\w]{1})(\s{19})(ZZ)/gm;
     #offenderMotiv41 = /^(41)([ID]{1})(.{9})(.{12})(\d{3})([ACDGN|\s]{4})(\s{17})(ZZ)/gm;
     #victim50 = /^(50)([ID]{1})(.{9})(.{12})(\d{3})(\w{1})([\d|\s]{3})([\s|\d]{8})([MFU\s]{1})([WBIAPU\s]{1})([HNU\s]{1})([RNU\s]{1})([\s\d]{4})(\s{2})(.{1})([\s|\d]{2})([\s|\s]{1})(.{9})(\s{6})(ZZ)/gm;
@@ -31,61 +33,6 @@ class LIBRS {
         this.librfile = librfile;
     
     }
-
-
-
-//Segment Property Description (31)
-//https://docs.librs.org/librs-spec#property-description-31
-#getpropertyDesc(){
-    const r = this.librfile.match(this.#propertyDesc31).map(i=>i.split(this.#propertyDesc31));
-    let cache = [];
-    r.forEach(i=>{
-        const seg = {
-            SegmentDescriptor:i[1],
-            ActionType:i[2],
-            ORINumber:i[3],
-            IncidentNumber:i[4].trim(),
-            TypeofPropertyLoss:i[5],
-            PropertyDescriptionType:i[6].trim(),
-            ValueofProperty:i[7].trim(),
-            DateRecovered:i[8].trim(),
-            SuspectedDrugType:i[9].trim(),
-            EstimatedDrugQuantity:i[10].trim(),
-            TypeDrugMeasurement:i[11].trim(),
-            PropertySequenceNumber:i[12],
-            //FutureExpansionBuffer:r[13],
-            EndofSegmentMarker:i[14],
-            //Padding:r[15]
-        }
-        cache.push(seg);
-    });
-    return cache;
-}
-
-//Segment Property Modification (32)
-//https://docs.librs.org/librs-spec#property-modification-32
-
-//Segment Property Offense (33)
-//https://docs.librs.org/librs-spec#propertyoffense-33
-#getpropertyOff(){
-    const r = this.librfile.match(this.#propertyOff33).map(i=>i.split(this.#propertyOff33));
-    let cache = [];
-    r.forEach(i=>{
-        const seg = {
-            SegmentDescriptor:i[1],
-            ActionType:i[2],
-            ORINumber:i[3],
-            IncidentNumber:i[4].trim(),
-            PropertySequenceNumberReference:i[5],
-            OffenseSequenceNumberReference:i[6],
-            //FutureExpansionBuffer:r[7],
-            EndofSegmentMarker:i[8],
-            //Padding:r[9]
-        }
-        cache.push(seg);
-    });
-    return cache;
-}
 
 
 //Segment Offender (40)
@@ -320,15 +267,18 @@ get Property() {
 }
 
 get PropertyDesc() {
-    return this.propertydesc;
+    const seg = [...this.librfile.matchAll(PropertyDesc)];
+    return seg.map(i=>i.groups)
 }
 
-get PropertyOff(){
-    return this.propertyoff;
+get PropertyOffense(){
+    const seg = [...this.librfile.matchAll(PropertyOffense)];
+    return seg.map(i=>i.groups)
 }
 
 get Offender(){
-    return this.offender;
+    const seg = [...this.librfile.matchAll(Offender)];
+    return seg.map(i=>i.groups)
 }
 
 get OffenderMotiv(){
