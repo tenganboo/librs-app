@@ -282,3 +282,117 @@ const Ethnicity = {
     N:"Not of Hispanic Origin",
     U:"Unknown",
 }
+
+const OffenderMotivation = {
+    A:"Alcohol",
+    C:"Computer Equipment",
+    D:"Drugs/Narcotics",
+    G:"Gaming Activity Motive for Crime",
+    N:"Not Applicable (LIBRS Only)",
+}
+
+const VictimType = {
+    I:"Individual",
+    B:"Business",
+    F:"Financial Institution",
+    G:"Government",
+    L:"Law Enforcement Officer (LIBRS Only)",
+    R:"Religious Organization",
+    S:"Society/Public",
+    O:"Other",
+    U:"Unknown",
+}
+
+const ResidenceStatus = {
+    R:"Resident",
+    N:"Nonresident",
+    U:"Unknown",
+}
+
+const JustifiableHomicideCircumstance ={
+    A:"Criminal Attacked Police Officer and That Officer Killed Criminal",
+    B:"Criminal Attacked Police Officer and Criminal Killed by Another Police Officer",
+    C:"Criminal Attacked by Civilian",
+    D:"Criminal Attempted Flight from a Crime",
+    E:"Criminal Killed in the Commission of a Crime",
+    F:"Criminal Resisted Arrest",
+    G:"Unable to Determine / Not Enough Information",
+}
+
+const AggravatedAssaultHomicideCircumstance={
+    1:"Argument",
+    2:"Assault on Law enforcement Officer(s)",
+    3:"Drug Dealing",
+    4:"Gangland",
+    5:"Juvenile Gang",
+    6:"Domestic Violence",
+    7:"Mercy Killing (Not applicable to aggravated assault)",
+    8:"Other Felony Involved",
+    9:"Other Circumstances",
+    10:"Unknown Circumstances",
+    20:"Criminal Killed by Private Citizen",
+    21:"Criminal Killed by Police Office",
+    30:"Child Playing with Weapon",
+    31:"Gun-Cleaning Accident",
+    32:"Hunting Accident",
+    33:"Other Negligent Weapon Handling",
+    34:"Other Negligent Killing",
+    40:"Child Abuse (LIBRS Only)",
+
+}
+
+const OfficerAssignmentTypes ={
+    F:"Two-Officer Vehicle",
+    G:"One-Officer Vehicle (Alone)",
+    H:"One-Officer Vehicle (Assisted)",
+    I:"Detective or Special Assignment (Alone)",
+    J:"Detective or Special Assignment (Assisted)",
+    K:"Other (Alone)",
+    L:"Other (Assisted)",
+}
+
+const InjuryType = {
+    N:"None",
+    B:"Apparent Broken Bones",
+    I:"Possible Internal Injury",
+    L:"Severe Laceration",
+    M:"Apparent Minor Injury",
+    O:"Other Major Injury",
+    T:"Loss of Teeth",
+    U:"Unconsciousness",
+}
+
+const RelationshipsVictimsOffenders = {
+
+    SE:"Victim Was Spouse",
+    CS:"Victim Was Common-Law Spouse",
+    PA:"Victim Was Parent",
+    SB:"Victim Was Sibling",
+    CH:"Victim Was Child",
+    GP:"Victim Was Grandparent",
+    GC:"Victim Was Grandchild",
+    IL:"Victim Was In-Law",
+    SP:"Victim Was Stepparent",
+    SC:"Victim Was Stepchild",
+    SS:"Victim Was Step-Sibling (stepbrother or stepsister)",
+    OF:"Victim Was Other Family Member",
+    NM:"Non-Married Live-in (LIBRS Only) Sent to NIBRS as 'CS'",
+    VO:"Victim Was Offender",
+    AQ:"Victim Was Acquaintance",
+    FR:"Victim Was Friend",
+    NE:"Victim Was Neighbor",
+    BE:"Victim Was Babysittee (the baby)",
+    BG:"Victim Was Boyfriend/Girlfriend",
+    XB:"Victim Was Ex-Boyfriend/Girlfriend (LIBRS Only). Now Maps to 'XR'; Sent to NIBRS as 'BG'",
+    CF:"Victim Was Child of Boyfriend or Girlfriend",
+    HR:"Homosexual Relationship *no longer used*",
+    XS:"Victim Was Ex-Spouse",
+    EE:"Victim Was Employee",
+    ER:"Victim Was Employer",
+    OK:"Victim Was Otherwise Known",
+    ES:"Victim Was Estranged Spouse (LIBRS Only) Sent to NIBRS as 'SE'",
+    XR:"Victim was from an Ex Relationship",
+    RU:"Relationship Unknown",
+    ST:"Victim Was Stranger",
+    VO:"Victim Was Offender",
+}

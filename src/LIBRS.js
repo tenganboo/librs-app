@@ -12,18 +12,17 @@ import {
     Property,
     PropertyDesc,
     PropertyOffense,
-    Offender
+    Offender,
+    OffenderMotive,
+    Victim,
+    VictimInjury,
+    VictimOffender
 
 } from './librsRegExModal';
 
 
 class LIBRS {
 
-    #offender40 =/^(40)([ID]{1})(.{9})(.{12})(\d{3})([\s|\d]{3})([\d|\s]{8})([\s|\w]{1})([\s|\w]{1})(\d{2})([\s|\w]{1})(\s{19})(ZZ)/gm;
-    #offenderMotiv41 = /^(41)([ID]{1})(.{9})(.{12})(\d{3})([ACDGN|\s]{4})(\s{17})(ZZ)/gm;
-    #victim50 = /^(50)([ID]{1})(.{9})(.{12})(\d{3})(\w{1})([\d|\s]{3})([\s|\d]{8})([MFU\s]{1})([WBIAPU\s]{1})([HNU\s]{1})([RNU\s]{1})([\s\d]{4})(\s{2})(.{1})([\s|\d]{2})([\s|\s]{1})(.{9})(\s{6})(ZZ)/gm;
-    #vicitiminjury51 = /^(51)([ID]{1})(.{9})(.{12})(\d{3})([NBILMOTU\s]{1})(\s{20})(ZZ)/gm;
-    #victimoffender52 = /^(52)([ID]{1})(.{9})(.{12})(\d{3})(\d{3})(\w{2})(\s{20})(ZZ)/gm;
     #arrestee60 = /^(60)([ID]{1})(.{9})(.{12})(\d{3})(.{12})(.{15})(.{20})([\s\d]{8})([OST\s]{1})([MCN\s]{1})([\d\s]{3})([\d\s]{8})([MF\s]{1})([WBIAU\s]{1})([HNU\s]{1})([RNU\s]{1})([DJWPA\s]{1})([YN\s]{1})(\s{17})(ZZ)/gm;
     #arresteearmed61 = /^(61)([ID]{1})(.{9})(.{12})(\d{3})([\d\sA]{3})(\s{20})(ZZ)/gm;
     #arresteestatute62 = /^(62)([ID]{1})(.{9})(.{12})(\d{3})(.{12})([\d\w\s]{15})([\d\w]{3})([-ACISH\s]{2})(\s{15})(ZZ)/gm;
@@ -35,133 +34,6 @@ class LIBRS {
     }
 
 
-//Segment Offender (40)
-//https://docs.librs.org/librs-spec#age-of-offender-37
-#getOffender(){
-    const r = this.librfile.match(this.#offender40).map(i=>i.split(this.#offender40));
-    let cache = [];
-    r.forEach(i=>{
-        const seg = {
-            SegmentDescriptor:i[1],
-            ActionType:i[2],
-            ORINumber:i[3],
-            IncidentNumber:i[4].trim(),
-            OffenderSequenceNumber:i[5],
-            AgeofOffender:i[6].trim(),
-            DateofBirthofOffender:i[7].trim(),
-            SexofOffender:i[8].trim(),
-            RaceofOffender:i[9].trim(),
-            BiasMotivation:i[10],
-            EthnicityofOffender:i[11].trim(),
-            //FutureExpansionBuffer:r[12],
-            EndofSegmentMarker:i[13],
-            //Padding:r[14]
-        }
-        cache.push(seg);
-    });
-    return cache;
-}
-
-//Segment Offender Using/Gaming Motivation (41)
-//https://docs.librs.org/librs-spec#offender-usinggaming-motivation-41
-#getOffenderMotiv(){
-    const r = this.librfile.match(this.#offenderMotiv41).map(i=>i.split(this.#offenderMotiv41));
-    let cache = [];
-    r.forEach(i=>{
-       const seg = {
-        SegmentDescriptor:i[1],
-        ActionType:i[2],
-        ORINumber:i[3],
-        IncidentNumber:i[4].trim(),
-        OffenderSequenceNumber:i[5],
-        OffenderSuspectedofUsingGamingMotivation:i[6].trim(),
-        //FutureExpansionBuffer:r[7],
-        EndofSegmentMarker:i[8],
-        //Padding:r[9]
-       }
-       cache.push(seg);
-    });
-    return cache;
-}
-
-//Segment Victim (50)
-//https://docs.librs.org/librs-spec#victim-50
-#getVictim(){
-    const r = this.librfile.match(this.#victim50).map(i=>i.split(this.#victim50));
-    let cache = [];
-    r.forEach(i=>{
-       const seg = {
-        SegmentDescriptor:i[1].trim(),
-        ActionType:i[2].trim(),
-        ORINumber:i[3].trim(),
-        IncidentNumber:i[4].trim(),
-        VictimSequenceNumber:i[5].trim(),
-        VictimType:i[6].trim(),
-        Age:i[7].trim(),
-        DateofBirth:i[8].trim(),
-        Sex:i[9].trim(),
-        Race:i[10].trim(),
-        Ethnicity:i[11].trim(),
-        ResidentStatus:i[12].trim(),
-        AggravatedAssault:i[13].trim(),
-        DeprecatedDataElement:i[14].trim(),
-        AdditionalJustifiableHomicideCircumstance:i[15].trim(),
-        TypeofOfficerActivityCircumstance:i[16].trim(),
-        OfficerAssignmentType:i[17].trim(),
-        OfficerORIOtherJurisdiction:i[18].trim(),
-        //FutureExpansionBuffer:r[19],
-        EndofSegmentMarker:i[20].trim(),
-        //Padding:r[21]
-       }
-       cache.push(seg);
-    });
-    return cache;
-}
-
-//Segment Victim Injury (51)
-//https://docs.librs.org/librs-spec#victim-injury-51
-#getVictimInjury(){
-    let r = this.librfile.match(this.#vicitiminjury51).map(i=>i.split(this.#vicitiminjury51));
-    let cache = [];
-    r.forEach(i=>{
-       const seg = {
-        SegmentDescriptor:i[1],
-        ActionType:i[2],
-        ORINumber:i[3],
-        IncidentNumber:i[4].trim(),
-        VictimSequenceNumber:i[5],
-        InjuryType:i[6],
-        //FutureExpansionBuffer:r[7],
-        EndofSegmentMarker:i[8],
-        //Padding:r[9]
-       }
-       cache.push(seg);
-    });
-    return cache;
-}
-
-//Victim/Offender Relation (52)
-//https://docs.librs.org/librs-spec#victimoffender-relation-52
-#getVictimOffender(){
-    let r = this.librfile.match(this.#victimoffender52).map(i=>i.split(this.#victimoffender52));
-    let cache = [];
-    r.forEach(i=>{
-       const seg = {
-        SegmentDescriptor:i[1],
-        ActionType:i[2],
-        ORINumber:i[3],
-        IncidentNumber:i[4].trim(),
-        VictimSequenceNumber:i[5],
-        OffenderNumbertobeRelated:i[6],
-        RelationshipofVictimtoOffender:i[7],
-        //FutureExpansionBuffer:r[8],
-        EndofSegmentMarker:i[9],
-        //Padding:r[10]
-       }
-       cache.push(seg);
-    });
-    return cache;
-}
 
 //Arrestee (60)
 //https://docs.librs.org/librs-spec#arrestee-60
@@ -281,20 +153,24 @@ get Offender(){
     return seg.map(i=>i.groups)
 }
 
-get OffenderMotiv(){
-    return this.offendermotiv ;
+get OffenderMotive(){
+    const seg = [...this.librfile.matchAll(OffenderMotive)];
+    return seg.map(i=>i.groups)
 }
 
 get Victim(){
-    return this.victim;
+    const seg = [...this.librfile.matchAll(Victim)];
+    return seg.map(i=>i.groups)
 }
 
 get VictimInjury(){
-    return this.victiminjury;
+    const seg = [...this.librfile.matchAll(VictimInjury)];
+    return seg.map(i=>i.groups)
 }
 
 get VictimOffender(){
-    return this.victimoffender;
+    const seg = [...this.librfile.matchAll(VictimOffender)];
+    return seg.map(i=>i.groups)
 }
 
 get Arrestee(){

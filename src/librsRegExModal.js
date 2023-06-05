@@ -8,6 +8,10 @@ const segments ={
        segpropertydesc:"(?<SegmentDescriptor>^31)",
        segpropertyoffense:"(?<SegmentDescriptor>^33)",
        segoffender:"(?<SegmentDescriptor>^40)",
+       segoffendermotive:regExGroup("SegmentDescriptor","^41"),
+       segvictim:regExGroup("SegmentDescriptor","^50"),
+       segvictiminjury:regExGroup("SegmentDescriptor","^51"),
+       segvictimoffender:regExGroup("SegmentDescriptor","^52"),
 }
 
 
@@ -17,7 +21,7 @@ const ControlDataElements ={
     c3:"(?<SubmissionDate>\\d{8})",
     c4:"(?<ReportingPeriod>\\d{6})",
     c5:"(?<ActionType>[ID]{1})",
-    c8:"(?<EndofSegmentMarker>ZZ)",
+    c8:regExGroup("EndofSegmentMarker","ZZ"),
     c9:"(?<Padding>\\s)",
     c10:"(?<SoftwareID>.{5})",
     c11:"(?<SoftwareVersion>.{10})",
@@ -36,6 +40,8 @@ const DataElements ={
     1:regExGroup("ORINumber",".{9}"),
     2:"(?<IncidentNumber>.{12})",
     6:"(?<LouisianaRevisedStatuteNumber>.{12})",
+    L6R:"(?<OffenseSequenceNumberReference>\\d{3})",
+    8:regExGroup("OffenderSuspectedofUsingGamingMotivation","[ACDGN\\s]{4}"),
     "8A":regExGroup("BiasMotivation","[\\d\\s]{2}"),
     14:"(?<TypeofPropertyLoss>[1-8\\s]{1})",
     15:"(?<PropertyDescriptionType>[0-9\\s]{2})",
@@ -44,15 +50,33 @@ const DataElements ={
     20:"(?<SuspectedDrugType>[ABC1DEFGHIJKLMNOPU\\s]{2})",
     21:"(?<EstimatedDrugQuantity>[\\s\\d\\s]{13})",
     22:"(?<TypeDrugMeasurement>[GMKOZLBTFDUNPX\\s]{2})",
-    P1:"(?<PropertySequenceNumber>\\d{3})",
-    P1R:"(?<PropertySequenceNumberReference>\\d{3})",
-    L6R:"(?<OffenseSequenceNumberReference>\\d{3})",
+    23:regExGroup("VictimSequenceNumber","\\d{3}"),
+    25:regExGroup("VictimType","[IBFGLRSOU\\s]{1}"),
+    "25A":regExGroup("TypeofOfficerActivityCircumstance","[1-11\\s]{2}"),
+    "25B":regExGroup("OfficerAssignmentType","[FGHIJKL\\s]{1}"),
+    "25C":regExGroup("OfficerORIOtherJurisdiction",".{9}"),
+    26:regExGroup("Age","[\\d\\s]{3}"),
+    L26:regExGroup("DateofBirth","[\\d\\s]{8}"),
+    27:regExGroup("Sex","[FMU\\s]{1}"),
+    28:regExGroup("Race","[WBIAU\\s]{1}"),
+    29:regExGroup("Ethnicity","[HNU\\s]{1}"),
+    30:regExGroup("ResidentStatus","[RNU\\s]{1}"),
+    31:regExGroup("AggravatedAssault","[1-40\\s]{4}"),
+    32:regExGroup("AdditionalJustifiableHomicideCircumstance","[ABCDEFG\\s]{4}"),
+    33:regExGroup("InjuryType","[NBILMOTU\\s]{1}"),
+    34:regExGroup("OffenderNumbertobeRelated","\\d{3}"),
+    35:regExGroup("RelationshipofVictimtoOffender","[\\w\\s]{2}"),
     36:"(?<OffenderSequenceNumber>\\d{3})",
     37:"(?<AgeofOffender>[\\d\\s]{3})",
     L37:"(?<DateofBirthofOffender>[\\d\\s]{8})",
     38:regExGroup("SexofOffender","[FMU\\s]{1}"),
     39:regExGroup("RaceofOffender","[WBIAU\\s]{1}"),
     "39A":regExGroup("EthnicityofOffender","[HNU\\s]{1}"),
+    40:regExGroup("ArrestSequenceNumber","\\d{3}"),
+    41:regExGroup("ArrestNumberLocalBookingNumber",".{12}"),
+    L55:regExGroup("ArrestTransactionNumber",".{15}"),
+    P1:"(?<PropertySequenceNumber>\\d{3})",
+    P1R:"(?<PropertySequenceNumberReference>\\d{3})",
 }
 
 
@@ -127,16 +151,7 @@ const Property = new RegExp(
 const PropertyDesc = new RegExp(
     segments.segpropertydesc+
     ControlDataElements.c5+
-    DataElements[1]+
-    DataElements[2]+
-    DataElements[14]+
-    DataElements[15]+
-    DataElements[16]+
-    DataElements[17]+
-    DataElements[20]+
-    DataElements[21]+
-    DataElements[22]+
-    DataElements.P1+
+    [1,2,14,15,16,17,20,21,22,"P1"].map(i=>DataElements[i]).join("")+
     FutureExpansionBuffer(17)+
     ControlDataElements.c8
 ,"gm")
@@ -152,10 +167,7 @@ const PropertyDesc = new RegExp(
 const PropertyOffense = new RegExp(
       segments.segpropertyoffense+
       ControlDataElements.c5+
-      DataElements[1]+
-      DataElements[2]+
-      DataElements.P1R+
-      DataElements.L6R+
+      [1,2,"P1R","L6R"].map(i=>DataElements[i]).join("")+
       FutureExpansionBuffer(20)+
     ControlDataElements.c8
 ,"gm")
@@ -167,17 +179,61 @@ const PropertyOffense = new RegExp(
 const Offender =  new RegExp(
       segments.segoffender+
       ControlDataElements.c5+
-      DataElements[1]+
-      DataElements[2]+
-      DataElements[36]+
-      DataElements[37]+
-      DataElements.L37+
-      DataElements[38]+
-      DataElements[39]+
-      DataElements["8A"]+
-      DataElements["39A"]+
+      [1,2,36,37,"L37",38,39,"8A","39A"].map(i=>DataElements[i]).join("")+
       FutureExpansionBuffer(19)+ //specs say length is 20, but only works with length 19
       ControlDataElements.c8
+,"gm")
+
+
+//Segment Offender Using/Gaming Motivation (41)
+//https://docs.librs.org/librs-spec#offender-usinggaming-motivation-41
+const OffenderMotive = new RegExp(
+      segments.segoffendermotive+
+      ControlDataElements.c5+
+      [1,2,36,8].map(i=>DataElements[i]).join("")+
+      FutureExpansionBuffer(17)+ //specs say length is 20, but only works with length 17
+      ControlDataElements.c8
+,"gm")
+
+
+//Segment Victim (50)
+//https://docs.librs.org/librs-spec#victim-50
+const Victim = new RegExp(
+    segments.segvictim+
+    ControlDataElements.c5+
+    [1,2,23,25,26,"L26",27,28,29,30].map(i=>DataElements[i]).join("")+
+    regExGroup("DeprecatedDataElement","\\s{2}")+
+    [32,"25A","25B","25C"].map(i=>DataElements[i]).join("")+
+    FutureExpansionBuffer(7)+ //specs say length is 6, but only works with length 7
+    ControlDataElements.c8
+,"gm")
+
+
+//Segment Victim Injury (51)
+//https://docs.librs.org/librs-spec#victim-injury-51
+const VictimInjury = new RegExp(
+    segments.segvictiminjury+
+    ControlDataElements.c5+
+    [1,2,23,33].map(i=>DataElements[i]).join("")+
+    FutureExpansionBuffer(20)+
+    ControlDataElements.c8
+,"gm")
+
+
+//Victim/Offender Relation (52)
+//https://docs.librs.org/librs-spec#victimoffender-relation-52
+const VictimOffender = new RegExp(
+    segments.segvictimoffender+
+    ControlDataElements.c5+
+    [1,2,23,34,35].map(i=>DataElements[i]).join("")+
+    FutureExpansionBuffer(20)+
+    ControlDataElements.c8
+,"gm")
+
+//Arrestee (60)
+//https://docs.librs.org/librs-spec#arrestee-60
+const Arrestee = new RegExp(
+   
 ,"gm")
 
 function FutureExpansionBuffer(buffersize){
@@ -197,5 +253,9 @@ export {
     Property,
     PropertyDesc,
     PropertyOffense,
-    Offender
+    Offender,
+    OffenderMotive,
+    Victim,
+    VictimInjury,
+    VictimOffender
 }

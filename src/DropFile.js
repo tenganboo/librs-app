@@ -8,9 +8,9 @@ function DropFile(props) {
             const librs = await e.target.files[0].text()
             const clibrs = new LIBRS(librs);
             console.log(clibrs.Incidents);
-            console.log(clibrs.Offender);
+            console.log(clibrs.VictimOffender);
         }
-        return;
+        else {return};
     }
 
     return (
