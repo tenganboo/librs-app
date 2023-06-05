@@ -8,14 +8,13 @@
 import {
     SubmissionHeader,
     Administrative,
-    Offense
+    Offense,
+    Property
 } from './librsRegExModal';
 
 
 class LIBRS {
 
-   
-    #property30 = /^(30)([ID]{1})(.{9})(.{12})([\d|\s]{2})([\d|\s]{2})(.{20})(ZZ)/gm;
     #propertyDesc31 =/(31)([ID]{1})(.{9})(.{12})([1-8|\s]{1})([\d|\s]{2})([\s|\d]{9})([\s|\d]{8})(.{2})(.{13})(.{2})(\d{3})(\s{17})(ZZ)/gm;
     #propertyOff33 =/^(33)([ID]{1})(.{9})(.{12})(\d{3})(\d{3})(.{20})(ZZ)/gm;
     #offender40 =/^(40)([ID]{1})(.{9})(.{12})(\d{3})([\s|\d]{3})([\d|\s]{8})([\s|\w]{1})([\s|\w]{1})(\d{2})([\s|\w]{1})(\s{19})(ZZ)/gm;
@@ -34,27 +33,6 @@ class LIBRS {
     }
 
 
-//Segment Property (30)
-//https://docs.librs.org/librs-spec#property-30
-#getProperty(){
-    const r = this.librfile.match(this.#property30).map(i=>i.split(this.#property30));
-    let cache = [];
-    r.forEach(i=>{
-        const seg = {
-            SegmentDescriptor:i[1],
-            ActionType:i[2],
-            ORINumber:i[3],
-            IncidentNumber:i[4].trim(),
-            NumberofStolenMotorVehicles:i[5].trim(),
-            NumberofRecoveredMotorVehicles:i[6].trim(),
-            //FutureExpansionBuffer:r[7],
-            EndofSegmentMarker:i[8],
-            //Padding:r[9]
-        }
-        cache.push(seg);
-    });
-    return cache;
-}
 
 //Segment Property Description (31)
 //https://docs.librs.org/librs-spec#property-description-31
@@ -337,7 +315,8 @@ get Offense() {
 }
 
 get Property() {
-    return this.property;
+    const seg = [...this.librfile.matchAll(Property)];
+    return seg.map(i=>i.groups);
 }
 
 get PropertyDesc() {

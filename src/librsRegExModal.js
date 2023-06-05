@@ -1,8 +1,10 @@
+const librsvalidationtxt = "https://api.librs.org/api/validate/txt"
 
 const segments ={
        segsubheader:"(?<SegmentDescriptor>^00)",
        segadministrative:"(?<SegmentDescriptor>^10)",
        segoffense:"(?<SegmentDescriptor>^20)",
+       segproperty:"(?<SegmentDescriptor>^30)",
 }
 
 
@@ -79,6 +81,19 @@ const Offense = new RegExp(
         ControlDataElements.c8
 ,"gm");
 
+//Segment Property (30)
+//https://docs.librs.org/librs-spec#property-30
+const Property = new RegExp(
+    segments.segproperty+
+    ControlDataElements.c5+
+    MiscNumbers.n1 +
+    MiscNumbers.n2 +
+    "(?<NumberofStolenMotorVehicles>[\\d\\s]{2})"+
+    "(?<NumberofRecoveredMotorVehicles>[\\d\\s]{2})"+
+    FutureExpansionBuffer(20)+
+    ControlDataElements.c8
+,"gm");
+
 function FutureExpansionBuffer(buffersize){
    return `(?<FutureExpansionBuffer>\\s{${buffersize}})`;
 }
@@ -88,5 +103,6 @@ export {
     ControlDataElements,
     SubmissionHeader,
     Administrative,
-    Offense
+    Offense,
+    Property
 }
