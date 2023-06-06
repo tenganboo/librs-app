@@ -396,3 +396,33 @@ const RelationshipsVictimsOffenders = {
     ST:"Victim Was Stranger",
     VO:"Victim Was Offender",
 }
+
+const ArrestType = {
+    O:"On-View Arrest",
+    S:"Summoned / Cited",
+    T:"Taken Into Custody",
+}
+
+const MultipleArresteeSegmentIndicator={
+    M:"Multiple",
+    C:"Count Arrestee",
+    N:"Not Applicable",
+}
+
+const ResidentStatus={
+    R:"Resident",
+    N:"Nonresident",
+    U:"Unknown",
+}
+
+const DispositionArresteeUnder18 ={
+    D:"Handled Within Department and Released",
+    J:"Referred to Juvenile Court or Probation Department",
+    W:"Referred to Welfare Agency",
+    P:"Referred to Other Police Agency",
+    A:"Referred to Criminal or Adult Court",
+}
+
+export {
+    DispositionArresteeUnder18
+}

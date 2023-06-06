@@ -1,3 +1,4 @@
+import {DispositionArresteeUnder18} from './nibrsAllowedEntries'
 const librsvalidationtxt = "https://api.librs.org/api/validate/txt"
 
 const segments ={
@@ -12,6 +13,7 @@ const segments ={
        segvictim:regExGroup("SegmentDescriptor","^50"),
        segvictiminjury:regExGroup("SegmentDescriptor","^51"),
        segvictimoffender:regExGroup("SegmentDescriptor","^52"),
+       segarrestee:regExGroup("SegmentDescriptor","^60"),
 }
 
 
@@ -21,6 +23,7 @@ const ControlDataElements ={
     c3:"(?<SubmissionDate>\\d{8})",
     c4:"(?<ReportingPeriod>\\d{6})",
     c5:"(?<ActionType>[ID]{1})",
+    c6:regExGroup("ClearanceIndicator","[YN]{1}"),
     c8:regExGroup("EndofSegmentMarker","ZZ"),
     c9:"(?<Padding>\\s)",
     c10:"(?<SoftwareID>.{5})",
@@ -73,7 +76,18 @@ const DataElements ={
     39:regExGroup("RaceofOffender","[WBIAU\\s]{1}"),
     "39A":regExGroup("EthnicityofOffender","[HNU\\s]{1}"),
     40:regExGroup("ArrestSequenceNumber","\\d{3}"),
+    L40:regExGroup("ArresteeName",".{20}"),
     41:regExGroup("ArrestNumberLocalBookingNumber",".{12}"),
+    42:regExGroup("ArrestDate","[\\d\\s]{8}"),
+    43:regExGroup("ArrestType","[OST\\s]{1}"),
+    44:regExGroup("MultipleArresteeSegmentIndicator","[MCN\\s]{1}"),
+    get 47(){return this[26]}, //Age (At Time of Arrest)
+    get L47(){return this.L26}, //Date of Birth
+    get 48() {return this[27]}, //Sex
+    get 49() {return this[28]}, //Race,
+    get 50(){return this[29]}, //Ethnicity
+    get 51(){return this[30]}, //Resident Status
+    52:regExGroup("DispositionofArresteeUnder18",`[${Object.keys(DispositionArresteeUnder18).join("")}\\s]{1}`),
     L55:regExGroup("ArrestTransactionNumber",".{15}"),
     P1:"(?<PropertySequenceNumber>\\d{3})",
     P1R:"(?<PropertySequenceNumberReference>\\d{3})",
@@ -233,7 +247,12 @@ const VictimOffender = new RegExp(
 //Arrestee (60)
 //https://docs.librs.org/librs-spec#arrestee-60
 const Arrestee = new RegExp(
-   
+    segments.segarrestee+
+    ControlDataElements.c5+
+    [40,41,"L55","L40",42,43,44,47,"L47",48,49,50,51,52].map(i=>DataElements[i]).join("")+
+    ControlDataElements.c6+
+    FutureExpansionBuffer(20)+
+    ControlDataElements.c8
 ,"gm")
 
 function FutureExpansionBuffer(buffersize){
@@ -257,5 +276,6 @@ export {
     OffenderMotive,
     Victim,
     VictimInjury,
-    VictimOffender
+    VictimOffender,
+    Arrestee
 }

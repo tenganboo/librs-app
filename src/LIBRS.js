@@ -16,7 +16,8 @@ import {
     OffenderMotive,
     Victim,
     VictimInjury,
-    VictimOffender
+    VictimOffender,
+    Arrestee
 
 } from './librsRegExModal';
 
@@ -174,7 +175,8 @@ get VictimOffender(){
 }
 
 get Arrestee(){
-    return this.arrestee;
+    const seg = [...this.librfile.matchAll(Arrestee)];
+    return seg.map(i=>i.groups)
 }
 
 get ArresteeArmed(){
