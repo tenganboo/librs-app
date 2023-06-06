@@ -1,22 +1,16 @@
-
+import {formatLibrsSubmissionDate} from './utils';
 
 function SubmissionHeader(props){
-    const librsdata = props.props;
-    const sheaders = getHeaders(librsdata);
+    const librsdata = props.librsdata;
 
     return(
         <div>
-           <h3>{sheaders.SegmentDescriptor} | {sheaders.SubmittingAgency.trim()} | {sheaders.ReportingPeriod
-}</h3>
+           {librsdata !== null && <div>
+             <span>{librsdata.SubmissionHeader.SegmentDescriptor}</span><span className="splitline">|&nbsp;</span> 
+             <span>{librsdata.SubmissionHeader.SubmittingAgency}</span><span className="splitline">|&nbsp;</span> 
+             <em>Reporting Period:&nbsp;</em><span>{formatLibrsSubmissionDate(librsdata.SubmissionHeader.ReportingPeriod)}</span></div>}
         </div>
     )
 }
-
-function getHeaders(librsdata){
-    const subh = librsdata!==0?librsdata.SubmissionHeader:[0];
-
-    return subh[0];
-}
-
 
 export default SubmissionHeader;

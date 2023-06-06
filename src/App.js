@@ -6,7 +6,7 @@ import Nav from './Nav'
 import SubmissionHeader from './SubmissionHeader'
 
 function App() {
-  const [librsdata, setLibrs] = useState(0);
+  const [librsdata, setLibrs] = useState(null);
 
   async function handleFileUpload(e){
     if(e.target.files){
@@ -16,12 +16,18 @@ function App() {
     else {return};
 }
 
+function handleCaseClick(e){
+  const incidentnumber = e.target.textContent;
+  const admin = librsdata.Administrative.filter(i=>i.IncidentNumber.trim()==incidentnumber)
+  console.log(admin);
+}
+
   return (
     <div className="App">
-      <DropFile props={handleFileUpload}></DropFile>
+      <DropFile handleFileUpload={handleFileUpload}></DropFile>
       <hr></hr>
-      <SubmissionHeader props={librsdata}></SubmissionHeader>
-      <Nav props={librsdata}></Nav>
+      <SubmissionHeader librsdata={librsdata}></SubmissionHeader>
+      <Nav section="Incidents" handleCaseClick={handleCaseClick} librsdata={librsdata}></Nav>
     </div>
   );
 }

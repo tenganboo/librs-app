@@ -5,6 +5,6 @@ ul {
 li {
      cursor: pointer;
     }
-.incidentno:hover {
+.sections:hover {
     text-decoration: underline;
 }

@@ -34,8 +34,10 @@ class LIBRS {
 
 get SubmissionHeader() {
     const seg = [...this.librfile.matchAll(SubmissionHeader)];
-    return seg.map(i=>i.groups);
+    const [results] = seg.map(i=>i.groups);
+    return results;
 }
+
 
 get Administrative() {
     const seg = [...this.librfile.matchAll(Administrative)];

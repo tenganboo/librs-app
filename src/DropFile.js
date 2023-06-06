@@ -1,7 +1,7 @@
 
 
 function DropFile(props) {
-    const handleFileUpload = props.props;
+    const handleFileUpload = props.handleFileUpload;
 
     return (
         <input onChange={handleFileUpload} type="file">

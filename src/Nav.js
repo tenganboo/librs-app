@@ -1,12 +1,11 @@
 import './Nav.css';
 
 function Nav(props) {
-     const librsdata = props.props;
-     console.log(librsdata);
+     const librsdata = props.librsdata;
      return(
          <nav>
            <ul>
-           {librsdata==0?"":librsdata.Incidents.map(i=><li className="incidentno" key={`case${i}`}>{i.trim()}</li>)}
+           {librsdata !== null && librsdata[props.section].map(i=><li onClick={props.handleCaseClick} className="sections" key={`case${i}`}>{i.trim()}</li>)}
            </ul>
          </nav>
      )
