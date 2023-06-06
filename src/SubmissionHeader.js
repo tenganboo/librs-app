@@ -2,13 +2,20 @@
 
 function SubmissionHeader(props){
     const librsdata = props.props;
-    const subh = librsdata!==0?librsdata.submissionHeader:[];
+    const sheaders = getHeaders(librsdata);
 
     return(
         <div>
-           <h3>{subh.length!==0?subh[0].SegmentDescriptor:""} </h3>
+           <h3>{sheaders.SegmentDescriptor} | {sheaders.SubmittingAgency.trim()} | {sheaders.ReportingPeriod
+}</h3>
         </div>
     )
+}
+
+function getHeaders(librsdata){
+    const subh = librsdata!==0?librsdata.SubmissionHeader:[0];
+
+    return subh[0];
 }
 
 
