@@ -423,6 +423,17 @@ const DispositionArresteeUnder18 ={
     A:"Referred to Criminal or Adult Court",
 }
 
+const ArresteeArmedWith ={
+    1:"Unarmed",
+    11:"Firearm (Type Not Stated)",
+    12:"Handgun",
+    13:"Rifle",
+    14:"Shotgun",
+    15:"Other Firearm",
+    16:"Lethal Cutting Instrument (switchblade knife, martial arts 'stars', Etc.)",
+    17:"Club, Blackjack or Brass Knuckles",
+}
+
 export {
     DispositionArresteeUnder18
 }

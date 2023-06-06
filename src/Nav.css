@@ -1,0 +1,10 @@
+ul {
+    width:15px;
+    list-style: none;
+}
+li {
+     cursor: pointer;
+    }
+.incidentno:hover {
+    text-decoration: underline;
+}

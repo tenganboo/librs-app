@@ -14,8 +14,9 @@ const segments ={
        segvictiminjury:regExGroup("SegmentDescriptor","^51"),
        segvictimoffender:regExGroup("SegmentDescriptor","^52"),
        segarrestee:regExGroup("SegmentDescriptor","^60"),
+       segarresteearmed:regExGroup("SegmentDescriptor","^61"),
+       segarresteestatute:regExGroup("SegmentDescriptor","^62"),
 }
-
 
 const ControlDataElements ={
     c1:"(?<SegmentDescriptor>^[0-8]{2})",
@@ -23,7 +24,7 @@ const ControlDataElements ={
     c3:"(?<SubmissionDate>\\d{8})",
     c4:"(?<ReportingPeriod>\\d{6})",
     c5:"(?<ActionType>[ID]{1})",
-    c6:regExGroup("ClearanceIndicator","[YN]{1}"),
+    c6:regExGroup("ClearanceIndicator","[YN\\s]{1}"),
     c8:regExGroup("EndofSegmentMarker","ZZ"),
     c9:"(?<Padding>\\s)",
     c10:"(?<SoftwareID>.{5})",
@@ -44,6 +45,7 @@ const DataElements ={
     2:"(?<IncidentNumber>.{12})",
     6:"(?<LouisianaRevisedStatuteNumber>.{12})",
     L6R:"(?<OffenseSequenceNumberReference>\\d{3})",
+    N6:regExGroup("AgencySuppliedNIBRSCode","[\\w\\d\\s]{3}"),
     8:regExGroup("OffenderSuspectedofUsingGamingMotivation","[ACDGN\\s]{4}"),
     "8A":regExGroup("BiasMotivation","[\\d\\s]{2}"),
     14:"(?<TypeofPropertyLoss>[1-8\\s]{1})",
@@ -81,6 +83,10 @@ const DataElements ={
     42:regExGroup("ArrestDate","[\\d\\s]{8}"),
     43:regExGroup("ArrestType","[OST\\s]{1}"),
     44:regExGroup("MultipleArresteeSegmentIndicator","[MCN\\s]{1}"),
+    get 45(){return this[6]}, //Louisiana Revised Statute Number of Arrest
+    L45:regExGroup("ArrestConnectiontoOffense",".{15}"),
+    get N45(){return this["N6"]}, //Agency Supplied NIBRS Code
+    46:regExGroup("ArresteeArmedWithatTimeofArrest","[0-7A\\s]{3}"),
     get 47(){return this[26]}, //Age (At Time of Arrest)
     get L47(){return this.L26}, //Date of Birth
     get 48() {return this[27]}, //Sex
@@ -89,6 +95,7 @@ const DataElements ={
     get 51(){return this[30]}, //Resident Status
     52:regExGroup("DispositionofArresteeUnder18",`[${Object.keys(DispositionArresteeUnder18).join("")}\\s]{1}`),
     L55:regExGroup("ArrestTransactionNumber",".{15}"),
+    70:regExGroup("InchoateModifier","[-ACISH\\s]{2}"),
     P1:"(?<PropertySequenceNumber>\\d{3})",
     P1R:"(?<PropertySequenceNumberReference>\\d{3})",
 }
@@ -249,9 +256,29 @@ const VictimOffender = new RegExp(
 const Arrestee = new RegExp(
     segments.segarrestee+
     ControlDataElements.c5+
-    [40,41,"L55","L40",42,43,44,47,"L47",48,49,50,51,52].map(i=>DataElements[i]).join("")+
+    [1,2,40,41,"L55","L40",42,43,44,47,"L47",48,49,50,51,52].map(i=>DataElements[i]).join("")+
     ControlDataElements.c6+
+    FutureExpansionBuffer(17)+
+    ControlDataElements.c8
+,"gm")
+
+//Arrestee Armed (61)
+//https://docs.librs.org/librs-spec#arrestee-armed-61
+const ArresteeArmed = new RegExp(
+    segments.segarresteearmed+
+    ControlDataElements.c5+
+    [1,2,40,46].map(i=>DataElements[i]).join("")+
     FutureExpansionBuffer(20)+
+    ControlDataElements.c8
+,"gm")
+
+//Arrestee Statute (62)
+//https://docs.librs.org/librs-spec#arrestee-statute-62
+const ArresteeStatute = new RegExp(
+    segments.segarresteestatute+
+    ControlDataElements.c5+
+    [1,2,40,45,"L45","N45",70].map(i=>DataElements[i]).join("")+
+    FutureExpansionBuffer(15)+
     ControlDataElements.c8
 ,"gm")
 
@@ -277,5 +304,7 @@ export {
     Victim,
     VictimInjury,
     VictimOffender,
-    Arrestee
+    Arrestee,
+    ArresteeArmed,
+    ArresteeStatute
 }
