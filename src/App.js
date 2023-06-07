@@ -7,9 +7,9 @@ import SubmissionHeader from './SubmissionHeader'
 import SegmentField from './SegmentField'
 
 const defaultSegment = "10 Administrative";
+let librsdata = null;
 
 function App() {
-  const [librsdata, setLibrs] = useState(null);
   const [segment, setSegment] = useState(defaultSegment);
   const [displaystate, setDisplay] = useState({ display: "none"});
   const [incidentstate, setIncident] = useState("");
@@ -17,7 +17,8 @@ function App() {
   async function handleFileUpload(e){
     if(e.target.files){
         const librs = await e.target.files[0].text();
-        setLibrs(new LIBRS(librs));
+        librsdata = new LIBRS(librs);
+        setIncident(librsdata.Incidents[0]);
         setDisplay({ display: "block"});
     }
     else {return};
@@ -29,11 +30,8 @@ function handleCaseClick(e){
 }
 
 function handleSegmentClick(e){
+  console.log(e.target.textContent);
   setSegment(e.target.textContent);
-  const segnametemp = segment.split(" ");
-  console.log(segnametemp[1]);
-  const fielddata = librsdata[segnametemp[1]].filter(i=>i.IncidentNumber.trim()==incidentstate)
-  console.log(fielddata);
 }
 
   return (
@@ -42,8 +40,8 @@ function handleSegmentClick(e){
       <hr></hr>
       <SubmissionHeader librsdata={librsdata}></SubmissionHeader>
       <Nav section="Incidents" handleNavClick={handleCaseClick} librsdata={librsdata}></Nav>
-      <Nav section="SegmentNames" handleNavClick={handleSegmentClick} librsdata={librsdata}></Nav>
-      <SegmentField display={displaystate} segname={segment}></SegmentField>
+      <Nav section="SegmentNames" availsegments={librsdata !== null && incidentstate!== null && librsdata.Segments(incidentstate) } handleNavClick={handleSegmentClick} librsdata={librsdata}></Nav>
+      <SegmentField  display={displaystate} incidentno={incidentstate} segname={segment} segmentdata={librsdata !== null && librsdata[segment.split(" ")[1]].filter(i=>i.IncidentNumber.trim()==incidentstate)}></SegmentField>
     </div>
   );
 }

@@ -6,6 +6,9 @@
 //LIBRS CODES https://github.com/bttruman/winlibrs-docs/tree/master/_data
 
 import {
+    segments,
+    ControlDataElements,
+    DataElements,
     SubmissionHeader,
     Administrative,
     Offense,
@@ -47,6 +50,28 @@ get SegmentNames() {
                 "61 ArresteeArmed",
                 "62 ArresteeStatute" ]
 }
+
+Segments(incidentno){
+    let cache = [];
+    Object.keys(segments).forEach(s=>{
+          const segex = new RegExp(
+            segments[s]+
+            ControlDataElements.c5+
+            DataElements[1]+
+            incidentno + "\\s"
+            ,"gm")
+
+           const mex = this.librfile.match(segex);
+           if(mex !==null){
+            cache.push(mex.map(i=>i.match(/^\d{2}/)[0]))
+           }
+           else{
+            return;
+           }
+    })
+    return cache;
+}
+
 get SubmissionHeader() {
     const seg = [...this.librfile.matchAll(SubmissionHeader)];
     const [results] = seg.map(i=>i.groups);

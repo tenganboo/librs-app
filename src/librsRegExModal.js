@@ -293,6 +293,7 @@ function regExGroup(label,pattern){
 export {
     segments,
     ControlDataElements,
+    DataElements,
     SubmissionHeader,
     Administrative,
     Offense,
