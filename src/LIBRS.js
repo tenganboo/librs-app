@@ -22,7 +22,8 @@ import {
     VictimOffender,
     Arrestee,
     ArresteeArmed,
-    ArresteeStatute 
+    ArresteeStatute,
+    SegmentName 
 
 } from './librsRegExModal';
 
@@ -31,25 +32,8 @@ class LIBRS {
 
     constructor(librfile){
         this.librfile = librfile;
-    
     }
-
-get SegmentNames() {
-    return [   
-                "10 Administrative",
-                "20 Offense",
-                "30 Property",
-                "31 PropertyDesc",
-                "33 PropertyOffense",
-                "40 Offender",
-                "41 OffenderMotive",
-                "50 Victim",
-                "51 VictimInjury",
-                "52 VictimOffender",
-                "60 Arrestee",
-                "61 ArresteeArmed",
-                "62 ArresteeStatute" ]
-}
+ 
 
 Segments(incidentno){
     let cache = [];
@@ -63,13 +47,17 @@ Segments(incidentno){
 
            const mex = this.librfile.match(segex);
            if(mex !==null){
-            cache.push(mex.map(i=>i.match(/^\d{2}/)[0]))
+            cache.push(...mex.map(i=>i.match(/^\d{2}/)[0]))
            }
            else{
             return;
            }
     })
     return cache;
+}
+
+get SegmentName() {
+    return SegmentName;
 }
 
 get SubmissionHeader() {

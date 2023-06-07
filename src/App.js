@@ -39,8 +39,8 @@ function handleSegmentClick(e){
       <DropFile handleFileUpload={handleFileUpload}></DropFile>
       <hr></hr>
       <SubmissionHeader librsdata={librsdata}></SubmissionHeader>
-      <Nav section="Incidents" handleNavClick={handleCaseClick} librsdata={librsdata}></Nav>
-      <Nav section="SegmentNames" availsegments={librsdata !== null && incidentstate!== null && librsdata.Segments(incidentstate) } handleNavClick={handleSegmentClick} librsdata={librsdata}></Nav>
+      <Nav section={librsdata !== null && librsdata.Incidents} handleNavClick={handleCaseClick}></Nav>
+      <Nav section={librsdata !== null && incidentstate!== null && librsdata.Segments(incidentstate).map(s=>s + " " +librsdata.SegmentName[s]) } handleNavClick={handleSegmentClick} librsdata={librsdata}></Nav>
       <SegmentField  display={displaystate} incidentno={incidentstate} segname={segment} segmentdata={librsdata !== null && librsdata[segment.split(" ")[1]].filter(i=>i.IncidentNumber.trim()==incidentstate)}></SegmentField>
     </div>
   );

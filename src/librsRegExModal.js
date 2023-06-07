@@ -1,6 +1,22 @@
 import {DispositionArresteeUnder18} from './nibrsAllowedEntries'
 const librsvalidationtxt = "https://api.librs.org/api/validate/txt"
 
+const SegmentName = {  
+                 10:"Administrative",
+                 20:"Offense",
+                 30:"Property",
+                 31:"PropertyDesc",
+                 33:"PropertyOffense",
+                 40:"Offender",
+                 41:"OffenderMotive",
+                 50:"Victim",
+                 51:"VictimInjury",
+                 52:"VictimOffender",
+                 60:"Arrestee",
+                 61:"ArresteeArmed",
+                 62:"ArresteeStatute" 
+}
+
 const segments ={
        segsubheader:"(?<SegmentDescriptor>^00)",
        segadministrative:"(?<SegmentDescriptor>^10)",
@@ -307,5 +323,6 @@ export {
     VictimOffender,
     Arrestee,
     ArresteeArmed,
-    ArresteeStatute
+    ArresteeStatute,
+    SegmentName
 }
