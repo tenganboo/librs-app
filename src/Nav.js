@@ -5,7 +5,7 @@ function Nav(props) {
      return(
          <nav>
            <ul>
-           {librsdata !== null && librsdata[props.section].map(i=><li onClick={props.handleCaseClick} className="sections" key={`case${i}`}>{i.trim()}</li>)}
+           {librsdata !== null && librsdata[props.section].map(i=><li onClick={props.handleNavClick} className="sections" key={`case${i}`}>{i.trim()}</li>)}
            </ul>
          </nav>
      )

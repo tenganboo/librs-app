@@ -31,7 +31,22 @@ class LIBRS {
     
     }
 
-
+get SegmentNames() {
+    return [   
+                "10 Administrative",
+                "20 Offense",
+                "30 Property",
+                "31 PropertyDesc",
+                "33 PropertyOffense",
+                "40 Offender",
+                "41 OffenderMotive",
+                "50 Victim",
+                "51 VictimInjury",
+                "52 VictimOffender",
+                "60 Arrestee",
+                "61 ArresteeArmed",
+                "62 ArresteeStatute" ]
+}
 get SubmissionHeader() {
     const seg = [...this.librfile.matchAll(SubmissionHeader)];
     const [results] = seg.map(i=>i.groups);

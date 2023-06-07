@@ -1,5 +1,9 @@
+nav {
+    float:left;
+}
+
 ul {
-    width:15px;
+    width:auto;
     list-style: none;
 }
 li {
