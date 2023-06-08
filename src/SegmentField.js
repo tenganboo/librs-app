@@ -1,4 +1,5 @@
 import './SegmentField.css';
+import {genUniqueID} from './utils'
 
 function SegmentField(props){
     const segname = props.segname;
@@ -6,8 +7,8 @@ function SegmentField(props){
     const segmentdata = props.segmentdata;
 
     if(segmentdata){
-        const data = segmentdata[0];
-        const slist = Object.keys(data).map(i=><li key={i}>{data[i]}</li>);
+        console.log(segmentdata);
+        const slist = segmentdata.map(s=>Object.keys(s).map(i=><li key={genUniqueID(25)}>{s[i]}</li>));
         return(
             <fieldset style={display}>
                <legend>{segname}</legend>  
@@ -22,7 +23,6 @@ function SegmentField(props){
             </fieldset>
         )
     }
-    
 }
 
 export default SegmentField;

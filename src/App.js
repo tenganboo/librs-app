@@ -30,7 +30,6 @@ function handleCaseClick(e){
 }
 
 function handleSegmentClick(e){
-  console.log(e.target.textContent);
   setSegment(e.target.textContent);
 }
 
