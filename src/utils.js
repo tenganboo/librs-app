@@ -16,8 +16,17 @@ function genUniqueID(num){
   }
   return uni.join("");
 }
+
+function fullSegmentName(segmentname){
+  let results = {};
+  for (const [key, value] of Object.entries(segmentname)) {
+    results[key] = key + " " + value;
+  }
+  return results;
+}
     
 export {
     formatLibrsSubmissionDate,
-    genUniqueID
+    genUniqueID,
+    fullSegmentName
 }

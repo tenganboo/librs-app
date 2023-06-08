@@ -1,12 +1,14 @@
 import {useState,useRef} from 'react';
 import {LIBRS} from './LIBRS';
-import './App.css';
+import './css/App.css';
 import DropFile from './DropFile'
 import Nav from './Nav'
 import SubmissionHeader from './SubmissionHeader'
 import SegmentField from './SegmentField'
+import {fullSegmentName,genUniqueID} from './utils'
 
 const defaultSegment = "10 Administrative";
+const idlength = 25;
 
 function App() {
   const [segment, setSegment] = useState(defaultSegment);
@@ -39,8 +41,14 @@ function handleSegmentClick(e){
       <hr></hr>
       <SubmissionHeader librsdata={librsdata.current}></SubmissionHeader>
       <Nav section={librsdata.current !== null && librsdata.current.Incidents} handleNavClick={handleCaseClick}></Nav>
-      <Nav section={librsdata.current !== null && incidentstate!== null && librsdata.current.Segments(incidentstate).map(s=>s + " " +librsdata.current.SegmentName[s]) } handleNavClick={handleSegmentClick}></Nav>
-      <SegmentField  display={displaystate} incidentno={incidentstate} segname={segment} segmentdata={librsdata.current !== null && librsdata.current[segment.split(" ")[1]].filter(i=>i.IncidentNumber.trim()==incidentstate)}></SegmentField>
+      {/*<Nav section={librsdata.current !== null && incidentstate!== null && librsdata.current.Segments(incidentstate).map(s=>s + " " +librsdata.current.SegmentName[s]) } handleNavClick={handleSegmentClick}></Nav>
+      <SegmentField  display={displaystate} segname={segment} segmentdata={librsdata.current !== null && librsdata.current[segment.split(" ")[1]].filter(i=>i.IncidentNumber.trim()==incidentstate)}></SegmentField>*/}
+      <div className="fieldsetdiv">
+         {librsdata.current !== null && [...new Set(librsdata.current.Segments(incidentstate))].map(s=>
+        <SegmentField  key={genUniqueID(idlength)} display={displaystate} segname={fullSegmentName(librsdata.current.SegmentName)[s]} segmentdata={librsdata.current !== null && librsdata.current[librsdata.current.SegmentName[s]].filter(i=>i.IncidentNumber.trim()==incidentstate)}></SegmentField>
+                            )}
+      </div>
+      
     </div>
   );
 }

@@ -1,0 +1,10 @@
+
+nav {
+    float:left;
+    margin:15px 15px 0 0;
+    height:1000px;
+}
+.sections:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

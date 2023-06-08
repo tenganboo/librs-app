@@ -132,7 +132,6 @@ get ArresteeStatute(){
     return seg.map(i=>i.groups)
 }
 
-
 get Incidents() {
     return this.Administrative.map(i=>i.IncidentNumber.trim()).sort((a,b)=>a-b);
 }

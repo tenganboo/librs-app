@@ -1,9 +1,5 @@
-fieldset {
-    margin: 15px 0 0 15px;
-}
-
 thead{
-   font-size: x-small;
+   font-size: small;
 }
 
 table {
@@ -16,6 +12,10 @@ table td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+table th {
+  text-align:left;
 }
 
 tbody tr:hover td{

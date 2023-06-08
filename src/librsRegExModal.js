@@ -51,18 +51,18 @@ const ControlDataElements ={
 const MiscNumbers = {
     n1:"(?<ORINumber>.{9})",
     n2:"(?<IncidentNumber>.{12})",
-    n3:"(?<LouisianaRevisedStatuteNumber>.{12})",
-    n4:"(?<AgencySuppliedNIBRSCode>[\\w\\d\\s]{3})",
+    n3:"(?<LRSNumber>.{12})",
+    n4:"(?<NIBRSCode>[\\w\\d\\s]{3})",
     n5:"(?<InchoateModifier>[-ACISH\\s]{2})"
 }
 
 const DataElements ={
     1:regExGroup("ORINumber",".{9}"),
     2:"(?<IncidentNumber>.{12})",
-    6:"(?<LouisianaRevisedStatuteNumber>.{12})",
+    6:"(?<LRSNumber>.{12})",
     L6R:"(?<OffenseSequenceNumberReference>\\d{3})",
-    N6:regExGroup("AgencySuppliedNIBRSCode","[\\w\\d\\s]{3}"),
-    8:regExGroup("OffenderSuspectedofUsingGamingMotivation","[ACDGN\\s]{4}"),
+    N6:regExGroup("NIBRSCode","[\\w\\d\\s]{3}"),
+    8:regExGroup("OffenderMotivation","[ACDGN\\s]{4}"),
     "8A":regExGroup("BiasMotivation","[\\d\\s]{2}"),
     14:"(?<TypeofPropertyLoss>[1-8\\s]{1})",
     15:"(?<PropertyDescriptionType>[0-9\\s]{2})",
@@ -155,10 +155,10 @@ const Offense = new RegExp(
         ControlDataElements.c5+
         MiscNumbers.n1 +
         MiscNumbers.n2 +
-        "(?<OffenseSequenceNumber>\\d{3})"+
+        "(?<OffenseSequence>\\d{3})"+
         MiscNumbers.n3+
-        "(?<OffenseAttemptedCompleted>[AC]{1})"+
-        "(?<OffenseConnectedtoVictimSequenceNumber>\\d{3})"+
+        "(?<AttemptedCompleted>[AC]{1})"+
+        "(?<VictimSequence>\\d{3})"+
         "(?<LocationType>\\d{2})"+
         "(?<NumberofPremisesEntered>[\\d\\s]{2})"+
         "(?<MethodofEntry>[FN\\s]{1})"+

@@ -1,9 +1,28 @@
-import './SegmentField.css';
+import './css/SegmentField.css';
 import {genUniqueID} from './utils'
 
+const headersused = {
+       10:[0,6,5,1],
+       20:[0,12,16,6,9,1],
+       30:[0,5,4],
+       31:[],
+       33:[],
+       40:[0,9,10,12,1],
+       41:[],
+       50:[],
+       51:[],
+       52:[],
+       60:[],
+       61:[],
+       62:[]
+}
+
+const idlength = 25;
+const fistItem = 0;
+
 function SegmentField(props){
-    const segname = props.segname;
-    const display = props.display;
+    const segname = props.segname;  //useState
+    const display = props.display;   //Display State
     const segmentdata = props.segmentdata;
 
     if(segmentdata){
@@ -11,7 +30,7 @@ function SegmentField(props){
         return(
             <fieldset style={display}>
                <legend>{segname}</legend>  
-                <ExpandSegmentsTable segmentdata={segmentdata}></ExpandSegmentsTable>
+                <ExpandSegmentsTable segname={segname} segmentdata={segmentdata}></ExpandSegmentsTable>
             </fieldset>
        )
     }
@@ -29,8 +48,8 @@ function ExpandSegmentsDL(props){
      let ddlist = [];
      props.segmentdata.forEach(i=>
         Object.keys(i).forEach(s=>{
-        if(i[s].trim().length === 0)i[s]="Not Set";
-         ddlist.push(<><dt key={genUniqueID(25)}>{s}</dt><dd key={genUniqueID(25)}>{i[s]}</dd></>);
+        if(i[s].trim().length === fistItem)i[s]="Not Set";
+         ddlist.push(<><dt key={genUniqueID(idlength)}>{s}</dt><dd key={genUniqueID(idlength)}>{i[s]}</dd></>);
         })
        )
         return(
@@ -42,15 +61,18 @@ function ExpandSegmentsDL(props){
 }
 
 function ExpandSegmentsTable(props){
+    console.log(props.segname);
     console.log(props.segmentdata);
-     let headers = Object.keys(props.segmentdata[0]).map(th => <th key={genUniqueID(25)}>{th}</th>);
+     const segmentdescriptor = props.segname.split(" ")[fistItem];
+     const fields = headersused[segmentdescriptor].map(f=>Object.keys(props.segmentdata[fistItem]).sort()[f]);
+     let headers = fields.map(th => <th key={genUniqueID(idlength)}>{th}</th>);
      let body = [];
      props.segmentdata.forEach(i=>{
         let td = [];
-        Object.keys(i).forEach(s=>{
-        td.push(<td key={genUniqueID(25)}>{i[s]}</td>);
+        fields.forEach(s=>{
+                if(fields.includes(s))td.push(<td key={genUniqueID(idlength)}>{i[s]}</td>);
         });
-        body.push(<tr key={genUniqueID(25)}>{td}</tr>);
+        body.push(<tr key={genUniqueID(idlength)}>{td}</tr>);
     })
         return(
              <table className="segTable">
