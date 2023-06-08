@@ -1,3 +1,27 @@
 fieldset {
-    margin: 15px 0 0 15px
+    margin: 15px 0 0 15px;
 }
+
+thead{
+   font-size: x-small;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
+
+}
+
+table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+tbody tr:hover td{
+    background-color: orange;
+    cursor: default;
+    overflow: visible; 
+    white-space: normal;
+    height:auto;  /* just added this line */
+  }
