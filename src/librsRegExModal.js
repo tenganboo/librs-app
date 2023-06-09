@@ -1,3 +1,11 @@
+//LIBRS FlatFile Reader
+//LIBRS SPECS https://docs.librs.org/librs-spec
+//LIBRS Validator https://api.librs.org/
+//API POST https://api.librs.org/api/validate/txt
+//LIBRS UPLOAD https://ftp.lsa.org/webclient/Login.xhtml
+//LIBRS CODES https://github.com/bttruman/winlibrs-docs/tree/master/_data
+
+
 import {DispositionArresteeUnder18} from './nibrsAllowedEntries'
 const librsvalidationtxt = "https://api.librs.org/api/validate/txt"
 
@@ -60,18 +68,26 @@ const DataElements ={
     1:regExGroup("ORINumber",".{9}"),
     2:"(?<IncidentNumber>.{12})",
     6:"(?<LRSNumber>.{12})",
+    7:  "(?<AttemptedCompleted>[AC]{1})",
+    L6:"(?<OffenseSequence>\\d{3})",
     L6R:"(?<OffenseSequenceNumberReference>\\d{3})",
     N6:regExGroup("NIBRSCode","[\\w\\d\\s]{3}"),
     8:regExGroup("OffenderMotivation","[ACDGN\\s]{4}"),
     "8A":regExGroup("BiasMotivation","[\\d\\s]{2}"),
+    9:"(?<LocationType>\\d{2})",
+    10:"(?<NumberofPremisesEntered>[\\d\\s]{2})",
+    11:"(?<MethodofEntry>[FN\\s]{1})",
+    12:"(?<TypeofCriminalActivityGang>[BCDEIOPTUXAFIS\\s]{3})",
+    13:"(?<TypeofWeaponForceInvolved>[0-9A\\s]{9})",
     14:"(?<TypeofPropertyLoss>[1-8\\s]{1})",
     15:"(?<PropertyDescriptionType>[0-9\\s]{2})",
     16:"(?<ValueofProperty>[\\s\\d]{9})",
     17:"(?<DateRecovered>[\\s\\d]{8})",
     20:"(?<SuspectedDrugType>[ABC1DEFGHIJKLMNOPU\\s]{2})",
-    21:"(?<EstimatedDrugQuantity>[\\s\\d\\s]{13})",
+    21:"(?<EstimatedDrugQuantity>[\\s\\d\\.]{13})",
     22:"(?<TypeDrugMeasurement>[GMKOZLBTFDUNPX\\s]{2})",
     23:regExGroup("VictimSequenceNumber","\\d{3}"),
+    24:regExGroup("OffVictimSequence","\\d{3}"),
     25:regExGroup("VictimType","[IBFGLRSOU\\s]{1}"),
     "25A":regExGroup("TypeofOfficerActivityCircumstance","[1-11\\s]{2}"),
     "25B":regExGroup("OfficerAssignmentType","[FGHIJKL\\s]{1}"),
@@ -153,19 +169,7 @@ const Administrative = new RegExp(
 const Offense = new RegExp(
         segments.segoffense+
         ControlDataElements.c5+
-        MiscNumbers.n1 +
-        MiscNumbers.n2 +
-        "(?<OffenseSequence>\\d{3})"+
-        MiscNumbers.n3+
-        "(?<AttemptedCompleted>[AC]{1})"+
-        "(?<VictimSequence>\\d{3})"+
-        "(?<LocationType>\\d{2})"+
-        "(?<NumberofPremisesEntered>[\\d\\s]{2})"+
-        "(?<MethodofEntry>[FN\\s]{1})"+
-        "(?<TypeofCriminalActivityGang>[BCDEIOPTUXAFIS\\s]{3})"+
-        "(?<TypeofWeaponForceInvolved>[0-9A\\s]{9})"+
-        MiscNumbers.n4 +
-        MiscNumbers.n5+
+        [1,2,"L6",6,7,24,9,10,11,12,13,"N6",70].map(i=>DataElements[i]).join("")+
         FutureExpansionBuffer(15)+ //specs say length is 14, but only works with length 15
         ControlDataElements.c8
 ,"gm");
