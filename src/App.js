@@ -11,28 +11,20 @@ const defaultSegment = "10 Administrative";
 const idlength = 25;
 
 function App() {
-  const [segment, setSegment] = useState(defaultSegment);
   const [displaystate, setDisplay] = useState({ display: "none"});
   const [incidentstate, setIncident] = useState("");
   const librsdata = useRef(null);
+  const librsfile = useRef();
 
   async function handleFileUpload(e){
-    if(e.target.files){
-        const librs = await e.target.files[0].text();
-        librsdata.current = new LIBRS(librs);
+        librsfile.current  = await e.target.files[0].text();
+        librsdata.current = new LIBRS(librsfile.current);
         setIncident(librsdata.current.Incidents[0]);
         setDisplay({ display: "block"});
-    }
-    else {return};
  }
 
 function handleCaseClick(e){
   setIncident(e.target.textContent);
-  setSegment(defaultSegment);
-}
-
-function handleSegmentClick(e){
-  setSegment(e.target.textContent);
 }
 
   return (

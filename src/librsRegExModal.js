@@ -77,7 +77,7 @@ const DataElements ={
     9:"(?<LocationType>\\d{2})",
     10:"(?<NumberofPremisesEntered>[\\d\\s]{2})",
     11:"(?<MethodofEntry>[FN\\s]{1})",
-    12:"(?<TypeofCriminalActivityGang>[BCDEIOPTUXAFIS\\s]{3})",
+    12:"(?<TypeofCriminalActivityGang>[BCDEIOPTUXAFISJGN\\s]{3})",
     13:"(?<TypeofWeaponForceInvolved>[0-9A\\s]{9})",
     14:"(?<TypeofPropertyLoss>[1-8\\s]{1})",
     15:"(?<PropertyDescriptionType>[0-9\\s]{2})",
