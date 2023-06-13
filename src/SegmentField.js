@@ -64,7 +64,6 @@ function ExpandSegmentsTable(props){
      const segmentdescriptor = props.segname.split(" ")[firstItem];
      const availsegments = props.segmentdata[firstItem] !== undefined && Object.keys(props.segmentdata[firstItem]).sort();
      const fields = headersused[segmentdescriptor].map(f=>availsegments[f]);
-     console.log(props.segmentdata);
      let headers = fields.map(th => <th key={genUniqueID(idlength)}>{th}</th>);
      let body = [];
      props.segmentdata.forEach(i=>{
