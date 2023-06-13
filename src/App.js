@@ -7,12 +7,12 @@ import SubmissionHeader from './SubmissionHeader'
 import SegmentField from './SegmentField'
 import {fullSegmentName,genUniqueID} from './utils'
 
-const defaultSegment = "10 Administrative";
 const idlength = 25;
 
 function App() {
   const [displaystate, setDisplay] = useState({ display: "none"});
   const [incidentstate, setIncident] = useState("");
+  const [selectionstate,setSelection] = useState("sections");
   const librsdata = useRef(null);
   const librsfile = useRef();
 
@@ -32,7 +32,7 @@ function handleCaseClick(e){
       <DropFile handleFileUpload={handleFileUpload}></DropFile>
       <hr></hr>
       <SubmissionHeader librsdata={librsdata.current}></SubmissionHeader>
-      <Nav section={librsdata.current !== null && librsdata.current.Incidents} handleNavClick={handleCaseClick}></Nav>
+      <Nav selectionstate={selectionstate} section={librsdata.current !== null && librsdata.current.Incidents} handleNavClick={handleCaseClick}></Nav>
       {/*<Nav section={librsdata.current !== null && incidentstate!== null && librsdata.current.Segments(incidentstate).map(s=>s + " " +librsdata.current.SegmentName[s]) } handleNavClick={handleSegmentClick}></Nav>
       <SegmentField  display={displaystate} segname={segment} segmentdata={librsdata.current !== null && librsdata.current[segment.split(" ")[1]].filter(i=>i.IncidentNumber.trim()==incidentstate)}></SegmentField>*/}
       <div className="fieldsetdiv">

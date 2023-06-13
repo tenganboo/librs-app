@@ -2,7 +2,7 @@ import './css/SegmentField.css';
 import {genUniqueID} from './utils'
 
 const headersused = {
-       10:[0,6,5,1,7],
+       10:[0,6,5,1,3,7],
        20:[0,12,6,9,1,7],
        30:[0,5,4],
        31:[0,8,5,7,12,13],
