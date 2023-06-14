@@ -6,3 +6,9 @@
 .fieldsetdiv {
   margin:15px 15px 0 0;
 }
+
+.segments td{
+  border-collapse: collapse;
+  border: 1px solid;
+  font-size: large;
+}

@@ -3,14 +3,16 @@ import {LIBRS} from './LIBRS';
 import {LIBRSFlatFile} from './LIBRSFlatFile';
 import './css/App.css';
 import DropFile from './DropFile'
-import Nav from './Nav'
+//import Nav from './Nav'
 import SubmissionHeader from './SubmissionHeader'
-import SegmentField from './SegmentField'
+//import SegmentField from './SegmentField'
+import ElementPosition from './ElementPosition'
 import {fullSegmentName,genUniqueID} from './utils'
 
 const idlength = 25;
+const segementlength = 151;
 
-function App() {
+/* function App2() {
   const [displaystate, setDisplay] = useState({ display: "none"});
   const [incidentstate, setIncident] = useState("");
   const [selectionstate,setSelection] = useState("sections");
@@ -24,7 +26,7 @@ function App() {
         librsdata.current = new LIBRS(librsfile.current);
         setIncident(librsdata.current.Incidents[0]);
         setDisplay({ display: "block"});
- }
+   }
 
 function handleCaseClick(e){
   setIncident(e.target.textContent);
@@ -44,6 +46,43 @@ function handleCaseClick(e){
       
     </div>
   );
+} */
+
+function App(){
+  const librsdata = useRef(null);
+  const [submissionheader, setSubmissionHeader] = useState(null);
+
+  async function handleFileUpload(e){
+    if(e.target.files.length > 0){
+      librsdata.current  = new LIBRSFlatFile(await e.target.files[0].text());
+      console.log(librsdata.current.SubmissionHeader00);
+      setSubmissionHeader(librsdata.current.SubmissionHeader00);
+      e.target.files.value = "";
+    }
+
+  }
+
+  function handleSegmentInputs(e){
+      console.log(e.target.value);
+  }
+
+  return (
+    <div className="App">
+       <DropFile handleFileUpload={handleFileUpload}></DropFile>
+       <hr></hr>
+       <SubmissionHeader submissionheader={submissionheader}></SubmissionHeader>
+       <br></br>
+       <table className="segments">
+        <thead></thead>
+        <tbody>
+          <tr>
+          {submissionheader !==null && Array.from(submissionheader.rawsegment).map(i=><ElementPosition onChange={handleSegmentInputs} key={genUniqueID(25)} el={i}></ElementPosition>)}
+          </tr>   
+        </tbody>
+       </table>
+    </div>
+  )
 }
+
 
 export default App;

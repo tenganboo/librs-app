@@ -5,9 +5,13 @@
 //LIBRS UPLOAD https://ftp.lsa.org/webclient/Login.xhtml
 //LIBRS CODES https://github.com/bttruman/winlibrs-docs/tree/master/_data
 
+import {fullSegmentName,
+        genUniqueID,
+        formatLibrsSubmissionDate,
+        formatLibrsReportingDate
+    } from './utils'
 
-
-
+const SEGMENT00 = 0;
 
 class LIBRSFlatFile {
 
@@ -34,12 +38,14 @@ class LIBRSFlatFile {
     }
 
     get SubmissionHeader00() {
-       const segment = this.flatfilearray[0];
+       const segment = this.flatfilearray[SEGMENT00];
        return {
         SegmentDescriptor:this.#getSegmentData(segment,1,2),
-        SubmittingAgency:this.#getSegmentData(segment,3,22),
-        SubmissionDate:this.#getSegmentData(segment,23,30),
-        ReportingPeriod:this.#getSegmentData(segment,31,36),
+        SubmittingAgency:this.#getSegmentData(segment,3,22).trim(),
+        SubmissionDate:formatLibrsSubmissionDate(this.#getSegmentData(segment,23,30)),
+        ReportingPeriod:formatLibrsReportingDate(this.#getSegmentData(segment,31,36)),
+        SoftwareID:this.#getSegmentData(segment,37,41).trim(),
+        SoftwareVersion:this.#getSegmentData(segment,42,51).trim(),
         rawsegment:segment.join("")
        };
     }
