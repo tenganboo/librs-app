@@ -13,11 +13,20 @@ import {fullSegmentName,
 
 const SEGMENT00 = 0;
 
+const DataElements = {
+      IncidentsNo:{start:13,end:24}
+}
+
 class LIBRSFlatFile {
     #sub00
     constructor(librfile){
         this.librfile = librfile;
         this.librsarray = this.librfile.split("\n").map(i=>Array.from(i));
+    }
+
+    SegmentsyIncidentNo(incidentno){
+        const incident = DataElements.IncidentsNo;
+        return this.Segments.filter(i=>this.#getSegmentData(i,incident.start,incident.end).trim()===incidentno);
     }
 
     get flatfile() {
@@ -55,6 +64,12 @@ class LIBRSFlatFile {
        };
     }
 
+    get Administrative10ALL(){
+        const adminEx = /^10/gm;
+        const admin10 = this.Segments.filter(i=>adminEx.test(i.join("")));
+        return admin10;
+    }
+
     get Segments(){
         return this.flatfilearray.slice(1,this.librsarray.length-1);
     }
@@ -62,6 +77,11 @@ class LIBRSFlatFile {
     //Submission Trailer (99)
     get SubmissionTrailer99() {
         return this.flatfilearray[this.librsarray.length -1];
+    }
+
+    get IncidentsNo(){
+        const incident = DataElements.IncidentsNo;
+        return this.Administrative10ALL.map(i=>this.#getSegmentData(i,incident.start,incident.end).trim()).sort();
     }
 
 }

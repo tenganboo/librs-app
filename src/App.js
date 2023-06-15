@@ -3,10 +3,10 @@ import {LIBRS} from './LIBRS';
 import {LIBRSFlatFile} from './LIBRSFlatFile';
 import './css/App.css';
 import DropFile from './DropFile'
-//import Nav from './Nav'
+import {Nav,NavL} from './Nav'
+import Segments from './Segments'
 import SubmissionHeader from './SubmissionHeader'
 //import SegmentField from './SegmentField'
-import ElementPosition from './ElementPosition'
 import {fullSegmentName,genUniqueID} from './utils'
 
 const idlength = 25;
@@ -48,16 +48,19 @@ function handleCaseClick(e){
   );
 } */
 
+
+
 function App(){
   const librsdata = useRef(null);
   const [submissionheader, setSubmissionHeader] = useState(null);
   const [segments, setSegments] = useState(null);
+  const [incidentstate, setIncident] = useState("");
 
   async function handleFileUpload(e){
     if(e.target.files.length > 0){
       librsdata.current  = new LIBRSFlatFile(await e.target.files[0].text());
       setSubmissionHeader(librsdata.current.SubmissionHeader00);
-      console.log(librsdata.current.Segments);
+      console.log(librsdata.current.SegmentsyIncidentNo("220002"));
       setSegments(librsdata.current.Segments);
       e.target.files.value = "";
     }
@@ -75,27 +78,20 @@ function App(){
 
   }
 
+  function handleCaseClick(e){
+    console.log(e.target.textContent);
+    setIncident(e.target.textContent);
+  }
+
   return (
     <div className="App">
        <DropFile handleFileUpload={handleFileUpload}></DropFile>
        <hr></hr>
        <SubmissionHeader submissionheader={submissionheader}></SubmissionHeader>
-       <br></br>
-       <table className="segments">
-        <thead></thead>
-        <tbody>
-          <tr>
-          {submissionheader !==null && submissionheader.segmentArray.map((i,idx)=><ElementPosition handleSegmentInputs={handleSubmissionInputs} key={genUniqueID(25)} idx={idx} el={i}></ElementPosition>)}
-          </tr>   
-        </tbody>
-       </table>
+       <Segments segments={submissionheader !== null && submissionheader.segmentArray} handleSegmentInputs={handleSubmissionInputs}></Segments>
+       <NavL section={librsdata.current !== null && librsdata.current.IncidentsNo} handleNavClick={handleCaseClick}></NavL>
        <hr></hr>
-       <table className="segments">
-        <thead></thead>
-        <tbody>
-          {segments !==null && segments.map((i)=><tr key={genUniqueID(25)}>{i.map((j,idx)=><ElementPosition handleSegmentInputs={handleSegmentInputs} key={genUniqueID(25)} idx={idx} el={j}></ElementPosition>)}</tr>)}   
-        </tbody>
-       </table>
+       
     </div>
   )
 }

@@ -1,6 +1,8 @@
 import './css/Nav.css';
 import {genUniqueID} from './utils'
 
+
+//Where using class LIBRS
 function Nav(props) {
    
      return(
@@ -13,4 +15,16 @@ function Nav(props) {
      )
 }
 
-export default Nav;
+//Where using class LIBRSFlatfile
+function NavL(props) {
+   
+  return(
+      <nav>
+        
+        {props.section !== false && props.section.map(i=><div onClick={props.handleNavClick} className="sections" key={genUniqueID(25)}>{i.trim()}</div>)}
+   
+      </nav>
+  )
+}
+
+export {Nav, NavL};
