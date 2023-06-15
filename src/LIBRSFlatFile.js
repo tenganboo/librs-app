@@ -14,7 +14,7 @@ import {fullSegmentName,
 const SEGMENT00 = 0;
 
 class LIBRSFlatFile {
-
+    #sub00
     constructor(librfile){
         this.librfile = librfile;
         this.librsarray = this.librfile.split("\n").map(i=>Array.from(i));
@@ -37,8 +37,12 @@ class LIBRSFlatFile {
         return segment.slice(start-paddindex,end).join("");
     }
 
+    set SubmissionHeader00(buffer){
+        this.#sub00 = buffer;
+    }
+
     get SubmissionHeader00() {
-       const segment = this.flatfilearray[SEGMENT00];
+       const segment = this.#sub00 || this.flatfilearray[SEGMENT00];
        return {
         SegmentDescriptor:this.#getSegmentData(segment,1,2),
         SubmittingAgency:this.#getSegmentData(segment,3,22).trim(),
@@ -46,6 +50,7 @@ class LIBRSFlatFile {
         ReportingPeriod:formatLibrsReportingDate(this.#getSegmentData(segment,31,36)),
         SoftwareID:this.#getSegmentData(segment,37,41).trim(),
         SoftwareVersion:this.#getSegmentData(segment,42,51).trim(),
+        segmentArray:segment,
         rawsegment:segment.join("")
        };
     }

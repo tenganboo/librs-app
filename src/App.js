@@ -51,19 +51,28 @@ function handleCaseClick(e){
 function App(){
   const librsdata = useRef(null);
   const [submissionheader, setSubmissionHeader] = useState(null);
+  const [segments, setSegments] = useState(null);
 
   async function handleFileUpload(e){
     if(e.target.files.length > 0){
       librsdata.current  = new LIBRSFlatFile(await e.target.files[0].text());
-      console.log(librsdata.current.SubmissionHeader00);
       setSubmissionHeader(librsdata.current.SubmissionHeader00);
+      console.log(librsdata.current.Segments);
+      setSegments(librsdata.current.Segments);
       e.target.files.value = "";
     }
 
   }
 
+  function handleSubmissionInputs(e){
+      let buffer = submissionheader.segmentArray;
+      buffer[e.target.dataset.idx] =e.target.value.toUpperCase();
+      librsdata.current.SubmissionHeader00 =buffer;
+      setSubmissionHeader(librsdata.current.SubmissionHeader00);
+  }
+
   function handleSegmentInputs(e){
-      console.log(e.target.value);
+
   }
 
   return (
@@ -76,8 +85,15 @@ function App(){
         <thead></thead>
         <tbody>
           <tr>
-          {submissionheader !==null && Array.from(submissionheader.rawsegment).map(i=><ElementPosition onChange={handleSegmentInputs} key={genUniqueID(25)} el={i}></ElementPosition>)}
+          {submissionheader !==null && submissionheader.segmentArray.map((i,idx)=><ElementPosition handleSegmentInputs={handleSubmissionInputs} key={genUniqueID(25)} idx={idx} el={i}></ElementPosition>)}
           </tr>   
+        </tbody>
+       </table>
+       <hr></hr>
+       <table className="segments">
+        <thead></thead>
+        <tbody>
+          {segments !==null && segments.map((i)=><tr key={genUniqueID(25)}>{i.map((j,idx)=><ElementPosition handleSegmentInputs={handleSegmentInputs} key={genUniqueID(25)} idx={idx} el={j}></ElementPosition>)}</tr>)}   
         </tbody>
        </table>
     </div>
