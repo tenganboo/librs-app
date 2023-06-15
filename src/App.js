@@ -54,14 +54,12 @@ function App(){
   const librsdata = useRef(null);
   const [submissionheader, setSubmissionHeader] = useState(null);
   const [segments, setSegments] = useState(null);
-  const [incidentstate, setIncident] = useState("");
 
   async function handleFileUpload(e){
     if(e.target.files.length > 0){
       librsdata.current  = new LIBRSFlatFile(await e.target.files[0].text());
       const defaultI = librsdata.current.IncidentsNo[defaultincident];
       setSubmissionHeader(librsdata.current.SubmissionHeader00);
-      setIncident(defaultI);
       setSegments(librsdata.current.SegmentsyIncidentNo(defaultI));
       e.target.files.value = "";
     }
@@ -80,7 +78,6 @@ function App(){
   }
 
   function handleCaseClick(e){
-    console.log(e.target.textContent);
     setSegments(librsdata.current.SegmentsyIncidentNo(e.target.textContent));
   }
 
@@ -96,6 +93,7 @@ function App(){
      
        
      <div className="fieldsetdiv">
+      {console.log(segments !== null && segments)}
      <Segments segments={segments !== null && segments} handleSegmentInputs={handleSegmentInputs}></Segments>
      </div>
      </div>

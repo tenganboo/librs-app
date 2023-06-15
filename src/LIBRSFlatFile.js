@@ -14,6 +14,7 @@ import {fullSegmentName,
 const SEGMENT00 = 0;
 
 const DataElements = {
+      SegmentDescriptor:{start:1,end:2},
       IncidentsNo:{start:13,end:24}
 }
 
