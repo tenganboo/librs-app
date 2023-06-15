@@ -11,7 +11,7 @@ import {fullSegmentName,genUniqueID} from './utils'
 
 const idlength = 25;
 const segementlength = 151;
-
+const defaultincident =0;
 /* function App2() {
   const [displaystate, setDisplay] = useState({ display: "none"});
   const [incidentstate, setIncident] = useState("");
@@ -59,9 +59,10 @@ function App(){
   async function handleFileUpload(e){
     if(e.target.files.length > 0){
       librsdata.current  = new LIBRSFlatFile(await e.target.files[0].text());
+      const defaultI = librsdata.current.IncidentsNo[defaultincident];
       setSubmissionHeader(librsdata.current.SubmissionHeader00);
-      console.log(librsdata.current.SegmentsyIncidentNo("220002"));
-      setSegments(librsdata.current.Segments);
+      setIncident(defaultI);
+      setSegments(librsdata.current.SegmentsyIncidentNo(defaultI));
       e.target.files.value = "";
     }
 
@@ -80,7 +81,7 @@ function App(){
 
   function handleCaseClick(e){
     console.log(e.target.textContent);
-    setIncident(e.target.textContent);
+    setSegments(librsdata.current.SegmentsyIncidentNo(e.target.textContent));
   }
 
   return (
@@ -89,8 +90,16 @@ function App(){
        <hr></hr>
        <SubmissionHeader submissionheader={submissionheader}></SubmissionHeader>
        <Segments segments={submissionheader !== null && submissionheader.segmentArray} handleSegmentInputs={handleSubmissionInputs}></Segments>
-       <NavL section={librsdata.current !== null && librsdata.current.IncidentsNo} handleNavClick={handleCaseClick}></NavL>
        <hr></hr>
+     <div className="container">
+     <NavL section={librsdata.current !== null && librsdata.current.IncidentsNo} handleNavClick={handleCaseClick}></NavL>
+     
+       
+     <div className="fieldsetdiv">
+     <Segments segments={segments !== null && segments} handleSegmentInputs={handleSegmentInputs}></Segments>
+     </div>
+     </div>
+     
        
     </div>
   )

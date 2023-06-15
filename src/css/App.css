@@ -2,13 +2,18 @@
   margin:50px;
 }
 
-
-.fieldsetdiv {
-  margin:15px 15px 0 0;
+.container {
+  display: grid; 
+  gap: 10px;
+  grid-template-columns: 50px 700px 200px;
 }
+
+
+
 
 .segments td{
   border-collapse: collapse;
 
   font-size: large;
 }
+
