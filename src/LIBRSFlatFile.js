@@ -12,20 +12,30 @@ import {fullSegmentName,
     } from './utils'
 
 const SEGMENT00 = 0;
+const ENDOFSEGMENT = "ZZ";
+const ENDOFLINE = "\r\n";
 
 const DataElements = {
       SegmentDescriptor:{start:1,end:2},
       IncidentsNo:{start:13,end:24}
 }
 
+const SubmissionHeader ={
+      SegmentDescriptor:{start:1,end:2},
+      ActionType:{start:3,end:3},
+      IncidentsNo:{start:13,end:24}
+}
+
 class LIBRSFlatFile {
-    #sub00
+    #sub00;
+    #segs;
+
     constructor(librfile){
         this.librfile = librfile;
-        this.librsarray = this.librfile.split("\n").map(i=>Array.from(i));
+        this.librsarray = this.librfile.split(ENDOFLINE).map(i=>Array.from(i));
     }
 
-    SegmentsyIncidentNo(incidentno){
+    SegmentsByIncidentNo(incidentno){
         const incident = DataElements.IncidentsNo;
         return this.Segments.filter(i=>this.#getSegmentData(i,incident.start,incident.end).trim()===incidentno);
     }
@@ -40,6 +50,10 @@ class LIBRSFlatFile {
 
     get flatfilearraylength() {
         return this.librsarray.length;
+    }
+
+    get segmentWrongLengths(){
+        return this.librsarray.map((i,idx)=>{return {idx:idx,len:i.length}}).filter(i=>i.len < 150);
     }
 
     #getSegmentData(segment,start,end) {
@@ -72,7 +86,12 @@ class LIBRSFlatFile {
     }
 
     get Segments(){
-        return this.flatfilearray.slice(1,this.librsarray.length-1);
+        const segments = this.#segs || this.flatfilearray.slice(1,this.librsarray.length-1);
+        return segments
+    }
+
+    set Segments(buffer){
+        this.#segs = buffer;
     }
 
     //Submission Trailer (99)

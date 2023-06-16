@@ -1,66 +1,33 @@
 import {useState,useRef} from 'react';
-import {LIBRS} from './LIBRS';
 import {LIBRSFlatFile} from './LIBRSFlatFile';
 import './css/App.css';
 import DropFile from './DropFile'
-import {Nav,NavL} from './Nav'
+import {NavL} from './Nav'
 import Segments from './Segments'
 import SubmissionHeader from './SubmissionHeader'
-//import SegmentField from './SegmentField'
-import {fullSegmentName,genUniqueID} from './utils'
+import LinkButton from './LinkButton'
+import Editor from './Editor'
 
-const idlength = 25;
-const segementlength = 151;
 const defaultincident =0;
-/* function App2() {
-  const [displaystate, setDisplay] = useState({ display: "none"});
-  const [incidentstate, setIncident] = useState("");
-  const [selectionstate,setSelection] = useState("sections");
-  const librsdata = useRef(null);
-  const librsfile = useRef();
-
-  async function handleFileUpload(e){
-        librsfile.current  = await e.target.files[0].text();
-        const test = new LIBRSFlatFile(librsfile.current);
-        console.log(test.SubmissionHeader00);
-        librsdata.current = new LIBRS(librsfile.current);
-        setIncident(librsdata.current.Incidents[0]);
-        setDisplay({ display: "block"});
-   }
-
-function handleCaseClick(e){
-  setIncident(e.target.textContent);
-}
-
-  return (
-    <div className="App">
-      <DropFile handleFileUpload={handleFileUpload}></DropFile>
-      <hr></hr>
-      <SubmissionHeader librsdata={librsdata.current}></SubmissionHeader>
-      <Nav selectionstate={selectionstate} section={librsdata.current !== null && librsdata.current.Incidents} handleNavClick={handleCaseClick}></Nav>
-      <div className="fieldsetdiv">
-         {librsdata.current !== null && [...new Set(librsdata.current.Segments(incidentstate))].map(s=>
-        <SegmentField  key={genUniqueID(idlength)} display={displaystate} segname={fullSegmentName(librsdata.current.SegmentName)[s]} segmentdata={librsdata.current !== null && librsdata.current[librsdata.current.SegmentName[s]].filter(i=>i.IncidentNumber.trim()==incidentstate)}></SegmentField>
-                            )}
-      </div>
-      
-    </div>
-  );
-} */
-
-
+const displaynone = "none";
+const displayblock = "block";
 
 function App(){
   const librsdata = useRef(null);
   const [submissionheader, setSubmissionHeader] = useState(null);
   const [segments, setSegments] = useState(null);
+  const [segmentsbyincidentno, setSegmentsByIncidentNo] = useState(null);
+  const [remembernavclick,setRemembernavclick] = useState("");
+  const [editdisplay,setEditDisplay] = useState(displaynone)
 
   async function handleFileUpload(e){
     if(e.target.files.length > 0){
       librsdata.current  = new LIBRSFlatFile(await e.target.files[0].text());
       const defaultI = librsdata.current.IncidentsNo[defaultincident];
+      setRemembernavclick(defaultI);
       setSubmissionHeader(librsdata.current.SubmissionHeader00);
-      setSegments(librsdata.current.SegmentsyIncidentNo(defaultI));
+      setSegments(librsdata.current.Segments);
+      setSegmentsByIncidentNo(librsdata.current.SegmentsByIncidentNo(defaultI));
       e.target.files.value = "";
     }
 
@@ -73,34 +40,68 @@ function App(){
       setSubmissionHeader(librsdata.current.SubmissionHeader00);
   }
 
+  function handleTextEdit(e){
+     const librsarray = e.target.value.split("\n").map(i=>Array.from(i));
+     librsdata.current.Segments = librsarray;
+     setSegments(librsdata.current.Segments)
+     setSegmentsByIncidentNo(librsdata.current.SegmentsByIncidentNo(remembernavclick));
+  }
+
   function handleSegmentInputs(e){
 
   }
 
-  function handleCaseClick(e){
-    setSegments(librsdata.current.SegmentsyIncidentNo(e.target.textContent));
+  function handleEditLink(e){
+    e.preventDefault();
+    if(editdisplay === displaynone){
+      setEditDisplay(displayblock);
+    }
+    else {
+      setEditDisplay(displaynone);
+    }
   }
 
+  function handleCaseClick(e){
+    setSegmentsByIncidentNo(librsdata.current.SegmentsByIncidentNo(e.target.textContent));
+    setRemembernavclick(e.target.textContent);
+  }
+
+if(segments && segmentsbyincidentno && librsdata.current && submissionheader){
   return (
     <div className="App">
        <DropFile handleFileUpload={handleFileUpload}></DropFile>
        <hr></hr>
        <SubmissionHeader submissionheader={submissionheader}></SubmissionHeader>
-       <Segments segments={submissionheader !== null && submissionheader.segmentArray} handleSegmentInputs={handleSubmissionInputs}></Segments>
+       <Segments segments={submissionheader.segmentArray} handleSegmentInputs={handleSubmissionInputs}></Segments>
+    
+       <p><LinkButton handleEditLink={handleEditLink} linkname={editdisplay === displayblock?"Click To Close LIBR Edit":"Click To Open LIBR Edit"}></LinkButton></p>
+       <Editor handleTextEdit={handleTextEdit} display={editdisplay} srows={segments.length} segments={editdisplay==displaynone?"":segments.map(i=>i.join("")).join("\r\n")}></Editor>
        <hr></hr>
      <div className="container">
-     <NavL section={librsdata.current !== null && librsdata.current.IncidentsNo} handleNavClick={handleCaseClick}></NavL>
-     
-       
-     <div className="fieldsetdiv">
-      {console.log(segments !== null && segments)}
-     <Segments segments={segments !== null && segments} handleSegmentInputs={handleSegmentInputs}></Segments>
+     <div className="incidentcol">
+      <fieldset>
+           <legend>Incident Number</legend>
+         <NavL remembernavclick={remembernavclick} section={librsdata.current.IncidentsNo} handleNavClick={handleCaseClick}></NavL>
+      </fieldset>
+     </div>
+      <div className="fieldsetdiv">
+      <fieldset>
+           <legend>Segments for Incident {remembernavclick}</legend>
+        <Segments segments={segmentsbyincidentno} handleSegmentInputs={handleSegmentInputs}></Segments>
+      </fieldset>  
      </div>
      </div>
-     
-       
     </div>
   )
+}
+else {
+  return (
+  <div className="App">
+    <DropFile handleFileUpload={handleFileUpload}></DropFile>
+  </div>
+  )
+}
+
 }
 
 

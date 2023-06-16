@@ -17,11 +17,12 @@ function Nav(props) {
 
 //Where using class LIBRSFlatfile
 function NavL(props) {
-   
+  const remembernavclick = props.remembernavclick;
+  
   return(
       <nav>
         
-        {props.section !== false && props.section.map(i=><div onClick={props.handleNavClick} className="sections" key={genUniqueID(25)}>{i.trim()}</div>)}
+        {props.section !== false && props.section.map(i=><div style={{textDecoration:remembernavclick==i.trim()?"underline":""}} onClick={props.handleNavClick} className="sections" key={genUniqueID(25)}>{i.trim()}</div>)}
    
       </nav>
   )

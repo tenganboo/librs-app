@@ -1,5 +1,3 @@
-import {useState} from 'react';
-
 
 const segindx ={
       fontSize:"15px",
