@@ -70,13 +70,13 @@ if(segments && segmentsbyincidentno && librsdata.current && submissionheader){
   return (
     <div className="App">
        <DropFile handleFileUpload={handleFileUpload}></DropFile>
-       <hr></hr>
+       <hr/>
        <SubmissionHeader submissionheader={submissionheader}></SubmissionHeader>
        <Segments segments={submissionheader.segmentArray} handleSegmentInputs={handleSubmissionInputs}></Segments>
     
        <p><LinkButton handleEditLink={handleEditLink} linkname={editdisplay === displayblock?"Click To Close LIBR Edit":"Click To Open LIBR Edit"}></LinkButton></p>
        <Editor handleTextEdit={handleTextEdit} display={editdisplay} srows={segments.length} segments={editdisplay==displaynone?"":segments.map(i=>i.join("")).join("\r\n")}></Editor>
-       <hr></hr>
+       <hr/>
      <div className="container">
      <div className="incidentcol">
       <fieldset>
