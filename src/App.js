@@ -2,13 +2,13 @@ import {useState,useRef} from 'react';
 import {LIBRSFlatFile} from './LIBRSFlatFile';
 import './css/App.css';
 import DropFile from './DropFile'
-import {NavL} from './Nav'
+import Nav  from './Nav'
 import Segments from './Segments'
 import SubmissionHeader from './SubmissionHeader'
 import LinkButton from './LinkButton'
 import Editor from './Editor'
 
-const defaultincident =0;
+const defaultincident = 0;
 const displaynone = "none";
 const displayblock = "block";
 
@@ -81,7 +81,7 @@ if(segments && segmentsbyincidentno && librsdata.current && submissionheader){
      <div className="incidentcol">
       <fieldset>
            <legend>Incident Number</legend>
-         <NavL remembernavclick={remembernavclick} section={librsdata.current.IncidentsNo} handleNavClick={handleCaseClick}></NavL>
+         <Nav remembernavclick={remembernavclick} section={librsdata.current.IncidentsNo} handleNavClick={handleCaseClick}></Nav>
       </fieldset>
      </div>
       <div className="fieldsetdiv">

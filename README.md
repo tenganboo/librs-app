@@ -6,3 +6,5 @@ All information to build this came from the [LIBRS Specs](https://docs.librs.org
 ## ToDo
 -Get to work properly
 -Add validation using [Librs Validator](https://api.librs.org/api/validate/txt)
+-Add saving modified file option.
+-Add comments to everything
