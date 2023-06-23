@@ -13,7 +13,7 @@ function Segments(props){
         <table className="segments">
             <thead></thead>
             <tbody>
-              {segments.map((i)=><tr key={genUniqueID(25)}><td className="errors">{i.length<150?"Wrong Length!":""}</td>{i.map((j,idx)=><ElementPosition handleSegmentInputs={handleSegmentInputs} key={genUniqueID(25)} idx={idx} el={j}></ElementPosition>)}</tr>)}   
+              {segments.map((i,row)=><tr key={genUniqueID(25)}><td className="errors">{i.length<150?"Wrong Length!":""}</td>{i.map((j,idx)=><ElementPosition handleSegmentInputs={handleSegmentInputs} key={genUniqueID(25)} row={row}  idx={idx} el={j}></ElementPosition>)}</tr>)}   
             </tbody>
           </table>
       )}

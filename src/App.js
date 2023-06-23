@@ -18,7 +18,8 @@ function App(){
   const [segments, setSegments] = useState(null);
   const [segmentsbyincidentno, setSegmentsByIncidentNo] = useState(null);
   const [remembernavclick,setRemembernavclick] = useState("");
-  const [editdisplay,setEditDisplay] = useState(displaynone)
+  const [editdisplay,setEditDisplay] = useState(displaynone);
+  const [listincidents,setListIncidents] = useState([]);
 
   async function handleFileUpload(e){
     if(e.target.files.length > 0){
@@ -28,6 +29,7 @@ function App(){
       setSubmissionHeader(librsdata.current.SubmissionHeader00);
       setSegments(librsdata.current.Segments);
       setSegmentsByIncidentNo(librsdata.current.SegmentsByIncidentNo(defaultI));
+      setListIncidents(librsdata.current.IncidentsNo);
       e.target.files.value = "";
     }
 
@@ -48,7 +50,11 @@ function App(){
   }
 
   function handleSegmentInputs(e){
-
+    let buffer = segmentsbyincidentno;
+    const idx = e.target.dataset.idx;
+    const row = e.target.dataset.row;
+    buffer[row][idx]= e.target.value.toUpperCase();
+    setSegmentsByIncidentNo(buffer);
   }
 
   function handleEditLink(e){
@@ -66,7 +72,7 @@ function App(){
     setRemembernavclick(e.target.textContent);
   }
 
-if(segments && segmentsbyincidentno && librsdata.current && submissionheader){
+if(segments && segmentsbyincidentno && listincidents && submissionheader){
   return (
     <div className="App">
        <DropFile handleFileUpload={handleFileUpload}></DropFile>
@@ -81,7 +87,7 @@ if(segments && segmentsbyincidentno && librsdata.current && submissionheader){
      <div className="incidentcol">
       <fieldset>
            <legend>Incident Number</legend>
-         <Nav remembernavclick={remembernavclick} section={librsdata.current.IncidentsNo} handleNavClick={handleCaseClick}></Nav>
+         <Nav remembernavclick={remembernavclick} section={listincidents} handleNavClick={handleCaseClick}></Nav>
       </fieldset>
      </div>
       <div className="fieldsetdiv">

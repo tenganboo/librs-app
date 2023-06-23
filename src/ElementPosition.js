@@ -41,6 +41,7 @@ function ElementPosition(props){
                      type="text" 
                      defaultValue={props.el===" "?"":props.el}
                      data-idx={props.idx}
+                     data-row={props.row}
                      ></input></td>
     )
 }
