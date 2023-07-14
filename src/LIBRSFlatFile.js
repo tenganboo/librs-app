@@ -30,14 +30,19 @@ class LIBRSFlatFile {
     #sub00;
     #segs;
 
-    constructor(librfile){
+    constructor(librfile,filename){
         this.librfile = librfile;
         this.librsarray = this.librfile.split(ENDOFLINE).map(i=>Array.from(i));
+        this.librsfilename = filename;
     }
 
     SegmentsByIncidentNo(incidentno){
         const incident = DataElements.IncidentsNo;
         return this.Segments.filter(i=>this.#getSegmentData(i,incident.start,incident.end).trim()===incidentno);
+    }
+
+    get filename() {
+        return this.librsfilename;
     }
 
     get flatfile() {
@@ -104,11 +109,15 @@ class LIBRSFlatFile {
         return this.Administrative10ALL.map(i=>this.#getSegmentData(i,incident.start,incident.end).trim()).sort();
     }
 
+    get updatedFlatFile(){
+        return this.SubmissionHeader00.rawsegment + "\r\n"+this.Segments.map(i=>i.join("")).join("\r\n") + this.SubmissionTrailer99.join("")
+    }
+
+    get updatedFlatFile64(){
+        return btoa(unescape(encodeURIComponent(this.updatedFlatFile)));
+    }
+
 }
-
-
-
-
 
 
 export {LIBRSFlatFile};

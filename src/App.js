@@ -23,7 +23,7 @@ function App(){
 
   async function handleFileUpload(e){
     if(e.target.files.length > 0){
-      librsdata.current  = new LIBRSFlatFile(await e.target.files[0].text());
+      librsdata.current  = new LIBRSFlatFile(await e.target.files[0].text(),e.target.files[0].name);
       const defaultI = librsdata.current.IncidentsNo[defaultincident];
       setRemembernavclick(defaultI);
       setSubmissionHeader(librsdata.current.SubmissionHeader00);
@@ -72,10 +72,30 @@ function App(){
     setRemembernavclick(e.target.textContent);
   }
 
+  //todo make reactive 07/14/2023
+  async function handleSaveEditsClick(e){
+     //e.target.href="data:text/plain;base64," +librsdata.current.updatedFlatFile64;
+     //console.log(librsdata.current.updatedFlatFile);
+    const fileb = await (await fetch("data:text/plain;base64," +librsdata.current.updatedFlatFile64)).blob();
+    fileb.name = librsdata.current.filename
+    e.target.href = URL.createObjectURL(fileb);
+    //e.target.target = "_blank";
+    e.target.download = librsdata.current.filename;
+    //e.target.click();
+    //e.target.href = "";
+  }
+
 if(segments && segmentsbyincidentno && listincidents && submissionheader){
   return (
     <div className="App">
-       <DropFile handleFileUpload={handleFileUpload}></DropFile>
+       <table width={"100%"}>
+         <tbody>
+          <tr>
+            <td><DropFile handleFileUpload={handleFileUpload}></DropFile></td>
+            <td><LinkButton handleEditLink={handleSaveEditsClick} linkname={"Click To Save Edits"}></LinkButton></td>
+          </tr>
+         </tbody>
+       </table>
        <hr/>
        <SubmissionHeader submissionheader={submissionheader}></SubmissionHeader>
        <Segments segments={submissionheader.segmentArray} handleSegmentInputs={handleSubmissionInputs}></Segments>
